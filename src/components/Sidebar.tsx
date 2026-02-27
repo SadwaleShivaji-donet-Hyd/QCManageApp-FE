@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import logo from '../assets/logo.png';
+import logo from '../assets/new-logo.png';
 
 interface SidebarProps {
   collapsed: boolean;
@@ -52,7 +52,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
   const { session, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => { logout(); navigate('/login'); };
+  const handleLogout = () => { logout(); navigate('/'); };
 
   return (
     <>

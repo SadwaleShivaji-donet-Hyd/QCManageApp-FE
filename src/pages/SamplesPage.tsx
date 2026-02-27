@@ -46,11 +46,41 @@ const actionStatusColorMap: Record<string, string> = {
     "Ready for Review": "bg-red-50 text-red-500",
 };
 
+const ArrowIcon = () => (
+    <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+        <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+    </svg>
+);
+const ChevronDown = () => (
+    <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+        <polyline points="6 9 12 15 18 9" />
+    </svg>
+);
+const SortIcon = () => (
+    <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <line x1="3" y1="6" x2="21" y2="6" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="11" y1="18" x2="13" y2="18" />
+    </svg>
+);
+
+const STATUS_OPTIONS = [
+    "All Statuses",
+    "5x Alignment Scan",
+    "Waiting for 40x",
+    "Ready for Lysis",
+    "Ready for Review",
+    "Ready for Mask",
+    "Ready for Fiducials"
+] as const;
+
 export default function SamplesPage() {
     const [samplesData, setSamplesData] = useState<Sample[]>(mockSamples);
     const navigate = useNavigate();
     const [filterStatus, setFilterStatus] = useState<string>("All Statuses");
     const [sortOrder, setSortOrder] = useState<string>("Sort by Status");
+
+    const [statusFilter, setStatusFilter] = useState<string>('All Statuses');
+    const [sortAsc, setSortAsc] = useState(true);
+    const [showDropdown, setShowDropdown] = useState(false);
 
     const handleRowClick = (sample: Sample) => {
         navigate(`/sample-details/${sample.id}`, { state: { sample } });
@@ -59,9 +89,13 @@ export default function SamplesPage() {
     const filterOptions = ["All Statuses", "In Process", "Completed", "On Hold", "Ready for Fiducials", "Scanned"];
     const sortOptions = ["Sort by Status", "Sort by ID", "Sort by Batch"];
 
-    const filteredSamples = filterStatus === "All Statuses"
-        ? samplesData
-        : samplesData.filter(s => s.status === filterStatus);
+    const filteredSamples = samplesData
+        .filter(b => statusFilter === 'All Statuses' || b.status === statusFilter)
+        .sort((a, b) => sortAsc ? a.status.localeCompare(b.status) : b.status.localeCompare(a.status));
+
+    // const filteredSamples = filterStatus === "All Statuses"
+    //     ? samplesData
+    //     : samplesData.filter(s => s.status === filterStatus);
 
     return (
         <div className="min-h-screen w-full bg-white p-8">
@@ -71,8 +105,7 @@ export default function SamplesPage() {
                     <h1 className="text-5xl font-bold text-gray-900">
                         Samples
                     </h1>
-                    <div className="flex items-center gap-4">
-                        {/* Filter Dropdown */}
+                    {/* <div className="flex items-center gap-4">
                         <select
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
@@ -83,7 +116,6 @@ export default function SamplesPage() {
                             ))}
                         </select>
 
-                        {/* Sort Dropdown */}
                         <select
                             value={sortOrder}
                             onChange={(e) => setSortOrder(e.target.value)}
@@ -93,6 +125,35 @@ export default function SamplesPage() {
                                 <option key={option} value={option}>{option}</option>
                             ))}
                         </select>
+                    </div> */}
+
+                    <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+                        <div style={{ position: 'relative' }}>
+                            <button className="ctrl-btn" onClick={() => setShowDropdown(d => !d)}
+                                style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff', fontSize: 13, fontWeight: 500, color: '#374151', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s', whiteSpace: 'nowrap' }}>
+                                <span style={{ color: '#9ca3af', fontSize: 12 }}>Status:</span>
+                                <span>{statusFilter}</span>
+                                <ChevronDown />
+                            </button>
+                            {showDropdown && (
+                                <>
+                                    <div onClick={() => setShowDropdown(false)} style={{ position: 'fixed', inset: 0, zIndex: 10 }} />
+                                    <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 20, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.1)', minWidth: 170, overflow: 'hidden' }}>
+                                        {STATUS_OPTIONS.map(opt => (
+                                            <button key={opt} className="status-opt"
+                                                onClick={() => { setStatusFilter(opt as BatchStatus | 'All Statuses'); setShowDropdown(false); }}
+                                                style={{ display: 'block', width: '100%', textAlign: 'left', padding: '9px 16px', background: statusFilter === opt ? '#f5f3ff' : 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: statusFilter === opt ? '#6d28d9' : '#374151', fontFamily: 'inherit', fontWeight: statusFilter === opt ? 600 : 400 }}>
+                                                {opt}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                        <button className="ctrl-btn" onClick={() => setSortAsc(s => !s)}
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff', fontSize: 13, fontWeight: 500, color: '#374151', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s', whiteSpace: 'nowrap' }}>
+                            <SortIcon />Sort by Status
+                        </button>
                     </div>
                 </div>
 
