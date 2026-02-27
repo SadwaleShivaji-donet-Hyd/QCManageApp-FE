@@ -13,7 +13,7 @@ import Login from "./pages/Login";
 import BatchesPage from "./pages/BatchesPage";
 import SamplesPage from "./pages/SamplesPage";
 import SlidesPage from "./pages/SlidesPage";
-
+import SamplesDetailsPage from "./pages/SampleDetailsPage";
 function App() {
   return (
     <AuthProvider>
@@ -27,7 +27,9 @@ function App() {
                 <Route path="/batches" element={<BatchesPage />} />
                 <Route path="/batches/:id" element={<BatchesPage />} />
                 <Route path="/samples" element={<SamplesPage />} />
+                <Route path="/sample-details/:sampleId" element={<SamplesDetailsPage />} />
                 <Route path="/slides" element={<SlidesPage />} />
+
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/login" replace />} />
