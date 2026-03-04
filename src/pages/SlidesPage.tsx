@@ -134,35 +134,35 @@ const STATUS_OPTIONS: ('All Statuses' | SlideStatus)[] = [
 ];
 
 const statusColors: Record<SlideStatus, { color: string; bg: string; border?: string }> = {
-  'Waiting for 40x':     { color: '#7c3aed', bg: 'transparent', border: 'none' },
-  'Ready for Fiducials': { color: '#374151', bg: '#f3f4f6',     border: 'none' },
-  '5x Alignment Scan':   { color: '#0891b2', bg: 'transparent', border: 'none' },
-  'Completed':           { color: '#059669', bg: '#ecfdf5',     border: 'none' },
-  'Excluded':            { color: '#dc2626', bg: '#fef2f2',     border: 'none' },
-  'In Process':          { color: '#d97706', bg: '#fffbeb',     border: 'none' },
-  'DigitalAssetsReady':  { color: '#0891b2', bg: '#ecf0ff',     border: 'none' },
-  'Batched':             { color: '#059669', bg: '#ecfdf5',     border: 'none' },
+  'Waiting for 40x': { color: '#7c3aed', bg: 'transparent', border: 'none' },
+  'Ready for Fiducials': { color: '#374151', bg: '#f3f4f6', border: 'none' },
+  '5x Alignment Scan': { color: '#0891b2', bg: 'transparent', border: 'none' },
+  'Completed': { color: '#059669', bg: '#ecfdf5', border: 'none' },
+  'Excluded': { color: '#dc2626', bg: '#fef2f2', border: 'none' },
+  'In Process': { color: '#d97706', bg: '#fffbeb', border: 'none' },
+  'DigitalAssetsReady': { color: '#0891b2', bg: '#ecf0ff', border: 'none' },
+  'Batched': { color: '#059669', bg: '#ecfdf5', border: 'none' },
 };
 
 // ── Icons ──────────────────────────────────────────────────
 const ArrowIcon = () => (
   <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
   </svg>
 );
 const WarningIcon = () => (
   <svg width="16" height="16" fill="none" stroke="#f59e0b" strokeWidth="2" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
   </svg>
 );
 const ChevronDown = () => (
   <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-    <polyline points="6 9 12 15 18 9"/>
+    <polyline points="6 9 12 15 18 9" />
   </svg>
 );
 const SortIcon = () => (
   <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-    <line x1="3" y1="6" x2="21" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+    <line x1="3" y1="6" x2="21" y2="6" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="11" y1="18" x2="13" y2="18" />
   </svg>
 );
 
@@ -172,7 +172,7 @@ const SlidesPage = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  
+
   // STEP 2 (API Integration): Change from ALL_SLIDES to empty array []
   // Currently: useState<Slide[]>(ALL_SLIDES)
   // When API ready: useState<Slide[]>([])
@@ -234,15 +234,7 @@ const SlidesPage = () => {
         }
       `}</style>
 
-      <div
-        className="slides-page"
-        style={{
-          padding: '36px 40px',
-          width: '100%',
-          boxSizing: 'border-box',
-          fontFamily: "'Inter', system-ui, sans-serif",
-        }}
-      >
+      <div className="min-h-screen w-full bg-white p-8">
         {/* ── Header ── */}
         <div
           className="slides-hdr"
@@ -252,10 +244,7 @@ const SlidesPage = () => {
             marginBottom: 16, flexWrap: 'wrap', gap: 12,
           }}
         >
-          <h1
-            className="slides-title"
-            style={{ fontSize: 34, fontWeight: 800, color: '#111827', margin: 0, letterSpacing: '-0.5px' }}
-          >
+          <h1 className="text-5xl font-bold text-gray-900">
             Slides
           </h1>
 
@@ -336,8 +325,7 @@ const SlidesPage = () => {
           {filtered.length} slides
         </p>
 
-        {/* ── List card ── */}
-        <div style={{
+        {/* <div style={{
           background: '#fff', borderRadius: 14,
           border: '1px solid #e5e7eb', overflow: 'hidden',
           boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
@@ -361,7 +349,6 @@ const SlidesPage = () => {
                   transition: 'background 0.12s', background: '#fff',
                 }}
               >
-                {/* Slide ID + warning */}
                 <div style={{ flex: '1 1 auto', display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
                   <span className="slide-id" style={{
                     fontSize: 17, fontWeight: 700, color: '#111827', letterSpacing: '-0.2px',
@@ -371,7 +358,6 @@ const SlidesPage = () => {
                   {slide.hasWarning && <WarningIcon />}
                 </div>
 
-                {/* Sample ID */}
                 <div style={{ flex: '0 0 auto', textAlign: 'right', minWidth: 100 }}>
                   <div className="slide-sid" style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>
                     {slide.sampleId}
@@ -379,7 +365,6 @@ const SlidesPage = () => {
                   <div style={{ fontSize: 12, color: '#0891b2', fontWeight: 500 }}>Sample</div>
                 </div>
 
-                {/* Status */}
                 <div style={{ flex: '0 0 auto', minWidth: 130, display: 'flex', justifyContent: 'flex-end' }}>
                   <span
                     className="slide-status"
@@ -396,7 +381,6 @@ const SlidesPage = () => {
                   </span>
                 </div>
 
-                {/* Arrow */}
                 <button
                   className="arrow-btn"
                   onClick={e => { e.stopPropagation(); navigate(`/slides/${slide.id}`); }}
@@ -413,6 +397,73 @@ const SlidesPage = () => {
               </div>
             ))
           )}
+        </div> */}
+
+        <div className="bg-white border border-gray-300 rounded-xl overflow-hidden mb-7">
+          <table className="w-full text-sm">
+            <tbody>
+              {filtered.length === 0 ? (
+                <tr>
+                  <td className="px-6 py-12 text-center text-gray-400 text-sm">
+                    No slides found.
+                  </td>
+                </tr>
+              ) : (
+                visible.map((slide) => (
+                  <tr
+                    key={slide.id}
+                    className="border-t border-gray-100 hover:bg-gray-50 transition bg-white cursor-pointer"
+                    onClick={() => navigate(`/slides/${slide.id}`)}
+                  >
+                    {/* Slide ID + Warning */}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {slide.id}
+                        </h3>
+                        {slide.hasWarning && <WarningIcon />}
+                      </div>
+                    </td>
+
+                    {/* Sample ID */}
+                    <td className="px-6 py-4 text-center">
+                      <p className="text-lg text-black font-semibold">
+                        {slide.sampleId}
+                      </p>
+                      <p className="text-xs text-cyan-500 font-semibold">
+                        Sample
+                      </p>
+                    </td>
+
+                    {/* Status */}
+                    <td className="px-6 py-4 text-right">
+                      <span
+                        className={`px-3 py-2 text-xs font-medium rounded-lg whitespace-nowrap ${statusColors[slide.status]
+                            ? `${statusColors[slide.status].bg} ${statusColors[slide.status].color}`
+                            : "bg-gray-100 text-gray-700"
+                          }`}
+                      >
+                        {slide.status}
+                      </span>
+                    </td>
+
+                    {/* Arrow */}
+                    <td className="px-6 py-4 text-center">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/slides/${slide.id}`);
+                        }}
+                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-600 hover:text-gray-800"
+                      >
+                        <ArrowIcon />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
 
         {/* ── Load more + count ── */}
@@ -447,7 +498,7 @@ const SlidesPage = () => {
                   }}
                 >
                   <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <polyline points="6 9 12 15 18 9"/>
+                    <polyline points="6 9 12 15 18 9" />
                   </svg>
                 </button>
               </div>

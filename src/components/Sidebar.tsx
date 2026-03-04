@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import logo from '../assets/new-logo.png';
+import logo from '../assets/logo.png';
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -10,42 +11,42 @@ interface SidebarProps {
 
 const BatchIcon = () => (
   <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-    <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+    <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
+    <rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
   </svg>
 );
 const SamplesIcon = () => (
   <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
   </svg>
 );
 const SlidesIcon = () => (
   <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-    <rect x="2" y="3" width="20" height="14" rx="2"/>
-    <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+    <rect x="2" y="3" width="20" height="14" rx="2" />
+    <line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" />
   </svg>
 );
 const LogoutIcon = () => (
   <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
   </svg>
 );
 const PlusIcon = () => (
   <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
   </svg>
 );
 const ScanIcon = () => (
-  <svg width="15" height="15" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" viewBox="0 0 24 24">
-    <path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/>
-    <rect x="7" y="7" width="10" height="10" rx="1"/>
+  <svg width="15" height="15" fill="none" stroke="rgba(0, 0, 0, 0.6)" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2" />
+    <rect x="7" y="7" width="10" height="10" rx="1" />
   </svg>
 );
 
 const navItems = [
   { label: 'Batches', path: '/batches', icon: <BatchIcon /> },
   { label: 'Samples', path: '/samples', icon: <SamplesIcon /> },
-  { label: 'Slides',  path: '/slides',  icon: <SlidesIcon /> },
+  { label: 'Slides', path: '/slides', icon: <SlidesIcon /> },
 ];
 
 const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
@@ -58,7 +59,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
     <>
       <style>{`
         .sb-search::placeholder { color: rgba(255,255,255,0.4); }
-        .sb-nav-link:hover { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
+        .sb-nav-link:hover { background: rgba(255,255,255,0.1) !important; color: black !important; }
         .sb-new-btn:hover { background: rgba(255,255,255,0.28) !important; }
         .sb-logout:hover { color: #fff !important; }
         .sb-toggle:hover { background: rgba(255,255,255,0.15) !important; }
@@ -66,16 +67,21 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
 
       <aside
         style={{
-          width: collapsed ? 68 : 210,
+          width: collapsed ? 68 : 240,
           height: "100vh",
-          background: "linear-gradient(180deg, #3730a3 0%, #4338ca 100%)",
+          // background: "linear-gradient(180deg, #3730a3 0%, #4338ca 100%)",
+          backgroundColor: "white",
           display: "flex",
           flexDirection: "column",
           transition: "width 0.25s cubic-bezier(.4,0,.2,1)",
           overflow: "hidden",
           flexShrink: 0,
+          boxShadow: "4px 0 10px rgba(0, 0, 0, 0.08)",
+
         }}
       >
+
+     
         {/* Logo + toggle arrow */}
         <div
           style={{
@@ -96,11 +102,13 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                 overflow: "hidden",
               }}
             >
+
+              
               <img
                 src={logo}
                 alt="QuantumCyte"
                 style={{
-                  height: 28,
+                  height: 48,
                   width: "auto",
                   maxWidth: 140,
                   objectFit: "contain",
@@ -120,7 +128,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
           )}
 
           {/* Arrow toggle — always visible in header row */}
-          <button
+          {/* <button
             className="sb-toggle"
             onClick={onToggle}
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -128,7 +136,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "rgba(255,255,255,0.75)",
+              color: "#1E1E1E",
               padding: 6,
               borderRadius: 7,
               display: "flex",
@@ -153,15 +161,15 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
             >
               <polyline points="15 18 9 12 15 6" />
             </svg>
-          </button>
+          </button> */}
         </div>
 
         {/* Search */}
         {!collapsed && (
           <div style={{ padding: "0 12px 14px" }}>
-            <div
+            <div className='border border-black/10'
               style={{
-                background: "rgba(255,255,255,0.13)",
+                background: "rgba(255, 255, 255, 0.13)",
                 borderRadius: 20,
                 display: "flex",
                 alignItems: "center",
@@ -169,17 +177,17 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                 padding: "8px 11px",
               }}
             >
-              <svg
+              {/* <svg
                 width="13"
                 height="13"
                 fill="none"
-                stroke="rgba(255,255,255,0.6)"
+                stroke="#1E1E1E"
                 strokeWidth="2"
                 viewBox="0 0 24 24"
               >
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
+              </svg> */}
               <input
                 className="sb-search"
                 placeholder="Search"
@@ -187,7 +195,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   background: "none",
                   border: "none",
                   outline: "none",
-                  color: "#fff",
+                  color: "#1E1E1E",
                   fontSize: 13,
                   width: "100%",
                   fontFamily: "inherit",
@@ -201,14 +209,13 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
         {/* New button */}
         <div style={{ padding: collapsed ? "0 10px 16px" : "0 12px 16px" }}>
           <button
-            className="sb-new-btn"
+            className="sb-new-btn bg-[#e3e3e3] border border-black/30"
             onClick={onNewClick}
             style={{
-              width: "100%",
-              background: "rgba(255,255,255,0.18)",
-              border: "none",
-              borderRadius: 20,
-              color: "#fff",
+              width: "max-content",
+              border: "1px solid [#767676]",
+              borderRadius: 10,
+              color: "#1E1E1E",
               fontWeight: 600,
               fontSize: 14,
               padding: collapsed ? "9px 0" : "9px 16px",
@@ -221,8 +228,10 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
               fontFamily: "inherit",
             }}
           >
-            <PlusIcon />
+            {/* <PlusIcon /> */}
+
             {!collapsed && "New"}
+            <MdOutlineKeyboardArrowRight />
           </button>
         </div>
 
@@ -241,8 +250,8 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                 justifyContent: collapsed ? "center" : "flex-start",
                 borderRadius: 10,
                 marginBottom: 2,
-                color: isActive ? "#fff" : "rgba(255,255,255,0.65)",
-                background: isActive ? "rgba(255,255,255,0.18)" : "transparent",
+                color: "#1E1E1E",
+                background: isActive ? "#F0F0F0" : "transparent",
                 textDecoration: "none",
                 fontSize: 14,
                 fontWeight: isActive ? 600 : 400,
@@ -265,8 +274,43 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
             flexShrink: 0,
           }}
         >
+           <button
+                  className="sb-toggle mx-auto"
+                  onClick={onToggle}
+                  title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#1E1E1E",
+                    padding: 6,
+                    borderRadius: 7,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                    marginLeft: collapsed ? 0 : 4,
+                    transition: "background 0.15s",
+                  }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    viewBox="0 0 24 24"
+                    style={{
+                      transform: collapsed ? "rotate(180deg)" : "none",
+                      transition: "transform 0.25s",
+                    }}
+                  >
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
           {!collapsed ? (
             <>
+           
               <div
                 style={{
                   display: "flex",
@@ -275,6 +319,8 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   marginBottom: 10,
                 }}
               >
+                
+    
                 <div
                   style={{
                     width: 36,
@@ -286,16 +332,17 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                     justifyContent: "center",
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#fff",
+                    color: "#1E1E1E",
                     flexShrink: 0,
                   }}
                 >
                   {session?.role?.charAt(0).toUpperCase() ?? "U"}
+
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <div
                     style={{
-                      color: "#fff",
+                      color: "#1E1E1E",
                       fontSize: 13,
                       fontWeight: 600,
                       whiteSpace: "nowrap",
@@ -307,7 +354,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   </div>
                   <div
                     style={{
-                      color: "rgba(255,255,255,0.55)",
+                      color: "#1E1E1E",
                       fontSize: 11,
                       textTransform: "capitalize",
                     }}
@@ -315,7 +362,9 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                     {session?.role ?? "Lab Tech"}
                   </div>
                 </div>
+                
               </div>
+              
               <button
                 className="sb-logout"
                 onClick={handleLogout}
@@ -326,7 +375,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "rgba(255,255,255,0.6)",
+                  color: "#1E1E1E",
                   fontSize: 13,
                   padding: "5px 2px",
                   borderRadius: 6,
@@ -358,7 +407,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   justifyContent: "center",
                   fontSize: 13,
                   fontWeight: 700,
-                  color: "#fff",
+                  color: "#1E1E1E",
                 }}
               >
                 {session?.role?.charAt(0).toUpperCase() ?? "U"}
@@ -371,7 +420,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "rgba(255,255,255,0.6)",
+                  color: "#1E1E1E",
                   display: "flex",
                   transition: "color 0.15s",
                 }}

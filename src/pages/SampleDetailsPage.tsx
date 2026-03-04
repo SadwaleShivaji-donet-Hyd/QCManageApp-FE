@@ -3,9 +3,9 @@ import { IoMdArrowRoundForward } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import { PiNoteDuotone } from "react-icons/pi";
 
-import { Plus } from "lucide-react";
+import { Check, ChevronDown, Eye, FastForward, Plus, TriangleAlert, X } from "lucide-react";
 import SampleLogModal from "../components/SampleLogModal";
-import ProgressStepper from "../components/ProgressStepper";
+import ProgressStepper from "../components/ProgressSampleStepper";
 import { mockSamples, mockSlides, mockLogEntries } from "../data/mockData";
 import type { Sample } from "../types/sample";
 
@@ -86,10 +86,28 @@ const sampleDetailsMap: Record<string, SampleDetail> = {
 };
 
 const statusColorMap: Record<string, string> = {
-    "Requested": "bg-blue-600 text-white",
-    "In Process": "bg-yellow-500 text-white",
-    "Completed": "bg-green-500 text-white",
-    "On Hold": "bg-red-500 text-white",
+    "Requested": "bg-blue-100 text-blue-800",
+
+    "Intake": "bg-indigo-100 text-indigo-800",
+
+    "Received": "bg-cyan-100 text-cyan-800",
+
+    "Waiting for 40x": "bg-amber-100 text-amber-800",
+
+    "Fiducial Printing": "bg-purple-100 text-purple-800",
+
+    "5x Alignment Scan": "bg-violet-100 text-violet-800",
+
+    "PrintMatch Processing": "bg-sky-100 text-sky-800",
+
+    "Checkfile Review": "bg-orange-100 text-orange-800",
+
+    "Mask Printing": "bg-pink-100 text-pink-800",
+
+    "Lysis": "bg-rose-100 text-rose-800",
+
+    "Delivery": "bg-green-100 text-green-800",
+    "Excluded": "bg-red-100 text-red-800",
 };
 
 const slideStatusColorMap: Record<string, string> = {
@@ -101,23 +119,71 @@ export default function SampleDetailsPage() {
     const navigate = useNavigate();
     const [sortBy, setSortBy] = useState("Status");
     const [logOpen, setLogOpen] = useState(false);
-
+    const [selectedSlides, setSelectedSlides] = useState<string[]>([]);
     const [sample, setSample] = useState<Sample | null>(mockSamples.find((s) => s.id === sampleId) || null);
-    const [slides, setSlides] = useState<Slide[]>(sampleId ? mockSlides[sampleId] || [] : []);
-
+    const [slides, setSlides] = useState(sampleId ? mockSlides[sampleId] || [] : []);
+    const [markProblemVisible, setMarkProblemVisible] = useState(false);
+    const [updateStatusVisible, setUpdateStatusVisible] = useState(false);
+    const [problemType, setProblemType] = useState("");
+    const [showProblemDropdown, setShowProblemDropdown] = useState(false);
+    const [problemNote, setProblemNote] = useState("");
+    const [sortByVisible, setSortByVisible] = useState(false);
+    const problemOptions = [
+        "Damaged during processing",
+        "Poor tissue quality",
+        "Insufficient tissue",
+        "Labeling error",
+        "Contamination",
+        "Equipment malfunction",
+        "Other",
+    ]
     // Get sample details from the map (in a real app, this would come from an API)
     const sampleDetail = sampleDetailsMap[sampleId || "0789456321"] || sampleDetailsMap["0789456321"];
+
+   
 
     const handleBackToSamples = () => {
         navigate("/samples");
     };
 
     const handleSlideClick = (slideId: string) => {
-        navigate(`/slide-details/${slideId}`);
+        navigate(`/samples/${sampleId}/slide-details/${slideId}`);
+    };
+
+    const toggleSlide = (id: string) => {
+        setSelectedSlides((prev) =>
+            prev.includes(id)
+                ? prev.filter((s) => s !== id)
+                : [...prev, id]
+        );
+    };
+
+    const updateSelectedSlideStatus = (newStatus: string) => {
+        setSlides((prevSlides) =>
+            prevSlides.map((slide) =>
+                selectedSlides.includes(slide.id)
+                    ? { ...slide, status: newStatus }
+                    : slide
+            )
+        );
+        setUpdateStatusVisible(false);
+        setSelectedSlides([]);
+    };
+
+    const excludeSelectedSlideStatus = () => {
+        setSlides((prevSlides) =>
+            prevSlides.map((slide) =>
+                selectedSlides.includes(slide.id)
+                    ? { ...slide, status: "Excluded" }
+                    : slide
+            )
+        );
+        setMarkProblemVisible(false);
+        setSelectedSlides([]);
     };
 
     return (<>
-        <div className="min-h-screen w-full bg-white p-8 px-18">
+        <div className="min-h-screen bg-white p-8 mx-18 my-4">
             {/* Breadcrumb */}
             <div className="text-sm text-gray-600 mb-6 flex items-center gap-4">
                 <button
@@ -215,11 +281,11 @@ export default function SampleDetailsPage() {
                         {sample?.limsId ?
                             (<p className="text-base text-gray-900 font-semibold ">{sample?.limsId}</p>
 
-                            ) : 
-                                (<p className="text-base text-gray-900 font-semibold "> - </p>
+                            ) :
+                            (<p className="text-base text-gray-900 font-semibold "> - </p>
 
-                                )
-                            }
+                            )
+                        }
 
                         <p className="text-xs text-cyan-500 font-semibold mb-1">LIMS ID</p>
 
@@ -249,7 +315,7 @@ export default function SampleDetailsPage() {
                     </h2>
                     <div className="flex items-center gap-2">
                         <span className="text-xs text-gray-600">Sort by</span>
-                        <select
+                        {/* <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
                             className="px-3 py-2 text-xs font-bold text-white bg-blue-600 rounded-lg border-0 hover:bg-blue-700 cursor-pointer"
@@ -257,7 +323,40 @@ export default function SampleDetailsPage() {
                             <option value="Status">Status</option>
                             <option value="ID">ID</option>
                             <option value="Date">Date</option>
-                        </select>
+                        </select> */}
+                        <div className="relative">
+                            <div
+                                onClick={() => setSortByVisible(true)}
+                                className="flex flex-row items-center justify-center gap-2 bg-black text-white rounded-lg px-4 py-2">
+                                <ChevronDown size={20} className="text-white" /> {sortBy}
+                            </div>
+                            {sortByVisible && (
+                                <div className="absolute top-full right-0 mt-1 bg-white border border-[#d9d9d9] rounded-lg shadow-lg py-1 min-w-[120px] z-10">
+
+                                    <button
+                                        onClick={() => {
+                                            setSortBy("Status");
+                                            setSortByVisible(false);
+                                        }}
+                                        className="w-full text-left px-3 py-2 hover:bg-[#f5f5f5] text-sm cursor-pointer"
+                                    >
+                                        Status
+                                    </button>
+
+                                    <button
+                                        onClick={() => {
+                                            setSortBy("Slide ID");
+                                            setSortByVisible(false);
+                                        }}
+                                        className="w-full text-left px-3 py-2 hover:bg-[#f5f5f5] text-sm cursor-pointer"
+                                    >
+                                        Slide ID
+                                    </button>
+
+                                </div>
+                            )}
+                        </div>
+
                     </div>
                 </div>
 
@@ -290,19 +389,201 @@ export default function SampleDetailsPage() {
                     ))}
                 </div> */}
 
-                <div className="overflow-hidden border border-gray-200 rounded-xl">
+                <div className="border border-gray-200 rounded-xl">
+                    {selectedSlides.length > 0 && (
+                        <div className="bg-[#1e1e1e] text-white px-6 py-3 flex items-center justify-between">
+
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => setSelectedSlides([])}
+                                    className="w-5 h-5 rounded border-2 border-white flex items-center justify-center bg-white"
+                                >
+                                    <div className="w-2.5 h-0.5 bg-[#1e1e1e] rounded" />
+                                </button>
+
+                                <span className="text-sm font-medium">
+                                    {selectedSlides.length} slides selected
+                                </span>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <div className="relative">
+                                    <button
+                                        onClick={() => setUpdateStatusVisible(!updateStatusVisible)}
+                                        className="flex cursor items-center gap-2 px-4 py-1.5 rounded-lg bg-white text-[#1e1e1e] text-sm hover:bg-[#f5f5f5]">
+                                        <FastForward size={14} />
+                                        Update Status
+                                        <ChevronDown size={14} />
+                                    </button>
+                                    {updateStatusVisible && (
+                                        <div
+                                            className="absolute top-full right-0 mt-1 bg-white border border-[#d9d9d9] rounded-lg shadow-lg py-1 min-w-[200px] z-20 max-h-[300px] overflow-y-auto">
+                                            {[
+                                                "Requested",
+                                                "Intake",
+                                                "Received",
+                                                "Waiting for 40x",
+                                                "Fiducial Printing",
+                                                "5x Alignment Scan",
+                                                "PrintMatch Processing",
+                                                "Checkfile Review",
+                                                "Mask Printing",
+                                                "Lysis",
+                                                "Delivery",
+                                            ].map((status) => (
+                                                <button
+                                                    key={status}
+                                                    onClick={() => updateSelectedSlideStatus(status)}
+                                                    className="w-full text-left px-4 py-2 hover:bg-[#f5f5f5] text-sm text-[#1e1e1e]"
+                                                >
+                                                    {status}
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                    )}
+
+                                </div>
+
+                                <button
+                                    onClick={() => setMarkProblemVisible(true)}
+                                    className="flex cursor items-center gap-2 px-4 py-1.5 rounded-lg bg-red-600 text-white text-sm hover:bg-red-700">
+                                    <TriangleAlert size={14} />
+                                    Mark Problem
+                                </button>
+
+                                {markProblemVisible && (
+
+                                    <div className="fixed inset-0 bg-black/40 w-[100vw] h-[100vh] flex items-center justify-center z-999">
+                                        <div className="bg-white rounded-lg shadow-xl text-black w-[800px] max-w-[92vw] px-6 py-8 flex flex-col gap-8">
+
+                                            {/* Header */}
+                                            <div className="flex items-center justify-between">
+                                                <h2 className="text-[32px]  font-normal">Problem with Slide</h2>
+                                                <button
+                                                    onClick={() => setMarkProblemVisible(false)}
+                                                    className="text-[#757575] hover:text-[#1e1e1e]"
+                                                >
+                                                    <X size={24} />
+                                                </button>
+                                            </div>
+
+                                            {/* Info */}
+                                            <div className="border border-[#757575] rounded-lg p-4 flex items-start gap-3">
+                                                <Eye className="text-[#1e1e1e]" size={23} />
+                                                <p className="text-[16px] font-semibold">
+                                                    If there was a problem with this slide and you can no longer process it to complete, Exclude it here.
+                                                </p>
+                                            </div>
+
+                                            {/* Problem Type */}
+                                            <div className="flex relative flex-col gap-2 w-[282px]">
+                                                <label className="text-[16px]">Type of Problem</label>
+
+                                                <button
+                                                    onClick={() => setShowProblemDropdown(!showProblemDropdown)}
+                                                    className="flex items-center justify-between w-full h-[40px] px-4 bg-white border border-[#d9d9d9] rounded-lg hover:border-[#b3b3b3] transition-colors"
+                                                >
+                                                    <span className={`text-[16px] ${problemType ? "text-[#1e1e1e]" : "text-[#757575]"}`}>
+                                                        {problemType || "Choose"}
+                                                    </span>
+
+                                                    <ChevronDown
+                                                        size={16}
+                                                        className={`transition-transform ${showProblemDropdown ? "rotate-180" : ""}`}
+                                                    />
+                                                </button>
+                                                {showProblemDropdown && (
+                                                    <div className="absolute top-18 z-10 mt-1 left-0 w-full bg-white border border-[#d9d9d9] rounded-lg shadow-lg z-10 py-1 max-h-[240px] overflow-y-auto">
+
+                                                        {problemOptions.map((option) => (
+                                                            <button
+                                                                key={option}
+                                                                onClick={() => {
+                                                                    setProblemType(option);
+                                                                    setShowProblemDropdown(false);
+                                                                }}
+                                                                className="w-full text-left px-4 py-2.5 text-[15px] hover:bg-[#f5f5f5] transition-colors"
+                                                            >
+                                                                {option}
+                                                            </button>
+                                                        ))}
+
+                                                    </div>
+                                                )}
+
+                                            </div>
+
+                                            {/* Description */}
+                                            <div className="flex flex-col gap-2 w-full">
+                                                <label className="text-[16px]">Describe the Problem</label>
+
+                                                <textarea
+                                                    value={problemNote}
+                                                    onChange={(e) => setProblemNote(e.target.value)}
+                                                    placeholder="Describe what happened..."
+                                                    className="w-full min-h-[80px] px-4 py-3 border border-[#d9d9d9] rounded-lg focus:border-[#757575]"
+                                                />
+                                            </div>
+
+                                            {/* Footer */}
+                                            <div className="flex items-center gap-4 w-full">
+                                                <button
+                                                    onClick={() => setMarkProblemVisible(false)}
+                                                    className="flex-1 py-3 rounded-lg hover:bg-[#f5f5f5]"
+                                                >
+                                                    Cancel
+                                                </button>
+
+                                                <button
+                                                    onClick={() => excludeSelectedSlideStatus()}
+                                                    className={`
+                                                        flex-1 py-3 rounded-lg text-white border border-[#757575]
+                                                        ${problemType ? "bg-black" : "bg-[#757575]"}
+                                                    `}
+                                                >
+                                                    Exclude Slide
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                )}
+
+                                <button
+                                    onClick={() => setSelectedSlides([])}
+                                    className="text-[#999] hover:text-white text-sm"
+                                >
+                                    Cancel
+                                </button>
+
+                            </div>
+                        </div>
+                    )}
                     <table className="w-full">
                         {/* Body */}
                         <tbody>
-                            {sampleDetail.slidesList.map((slide) => (
-                                <tr
-                                    key={slide.slideId}
-                                    onClick={() => handleSlideClick(slide.slideId)}
-                                    className="border-b last:border-none border-gray-200 hover:bg-gray-50 cursor-pointer transition"
-                                >
+                            {/* {sampleDetail.slidesList.map((slide) => ( */}
+                            {slides.map((slide) => (
 
+                                // <tr
+                                //     key={slide.slideId}
+                                //     onClick={() => handleSlideClick(slide.slideId)}
+                                //     className="border-b last:border-none border-gray-200 hover:bg-gray-50 cursor-pointer transition"
+                                // >
+                                <tr
+                                    key={slide.id}
+                                    onClick={() => handleSlideClick(slide.id)}
+                                    className={`
+    border-b border-gray-200 cursor-pointer transition
+    ${selectedSlides.includes(slide.id)
+                                            ? "bg-[#f0f7fa]"
+                                            : "hover:bg-gray-50"}
+  `}
+                                >
                                     {/* Checkbox */}
-                                    <td className="p-2 px-8">
+                                    {/* <td className="p-2 px-8">
                                         <input
                                             type="checkbox"
                                             className="w-5 h-5 rounded-lg border-[#CBD5E1]"
@@ -313,6 +594,36 @@ export default function SampleDetailsPage() {
                                             {slide.slideId}
 
                                         </span>
+                                    </td> */}
+                                    <td className="p-2 px-8 flex items-center gap-3">
+
+                                        <div
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleSlide(slide.id);
+                                            }}
+                                            className={`
+      w-5 h-5 rounded border-2 flex items-center justify-center shrink-0
+      ${selectedSlides.includes(slide.id)
+                                                    ? "bg-[#1e1e1e] border-[#1e1e1e]"
+                                                    : "border-[#d9d9d9] bg-white hover:border-[#999]"}
+    `}
+                                        >
+                                            {selectedSlides.includes(slide.id) && (
+                                                <Check size={14} className="text-white" />
+                                            )}
+                                        </div>
+
+                                        <span className="text-[20px] font-semibold tracking-tight text-gray-900">
+                                            {slide.id}
+                                        </span>
+
+                                        {slide.status === "Excluded" && (
+                                            <span className="ml-2 text-xs font-bold bg-red-100 text-red-800 rounded-full px-2 py-1">
+                                                Excluded
+                                            </span>
+                                        )}
+
                                     </td>
 
                                     {/* Slide ID */}
@@ -338,7 +649,7 @@ export default function SampleDetailsPage() {
                                     <td className="p-2 px-8">
                                         <div className="flex items-center justify-end gap-4">
 
-                                            <span className={`text-sm font-bold ${slideStatusColorMap[slide.status] || "text-gray-700"}`}>
+                                            <span className={`text-sm font-bold rounded-xl px-2 py-1 ${statusColorMap[slide.status] || "text-gray-700"}`}>
                                                 {slide.status}
                                             </span>
 

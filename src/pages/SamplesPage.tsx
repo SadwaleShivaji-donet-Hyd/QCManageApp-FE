@@ -93,39 +93,16 @@ export default function SamplesPage() {
         .filter(b => statusFilter === 'All Statuses' || b.status === statusFilter)
         .sort((a, b) => sortAsc ? a.status.localeCompare(b.status) : b.status.localeCompare(a.status));
 
-    // const filteredSamples = filterStatus === "All Statuses"
-    //     ? samplesData
-    //     : samplesData.filter(s => s.status === filterStatus);
+
 
     return (
-        <div className="min-h-screen w-full bg-white p-8">
-            {/* Header Section */}
-            <div className="mb-8">
-                <div className="flex items-center justify-between mb-8">
+        <div className="min-h-screen bg-white p-8 mx-14 my-4">
+            <div className="mb-4">
+                <div className="flex items-center justify-between mb-4">
                     <h1 className="text-5xl font-bold text-gray-900">
                         Samples
                     </h1>
-                    {/* <div className="flex items-center gap-4">
-                        <select
-                            value={filterStatus}
-                            onChange={(e) => setFilterStatus(e.target.value)}
-                            className="px-4 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 hover:border-gray-400 cursor-pointer"
-                        >
-                            {filterOptions.map(option => (
-                                <option key={option} value={option}>{option}</option>
-                            ))}
-                        </select>
-
-                        <select
-                            value={sortOrder}
-                            onChange={(e) => setSortOrder(e.target.value)}
-                            className="px-4 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 hover:border-gray-400 cursor-pointer"
-                        >
-                            {sortOptions.map(option => (
-                                <option key={option} value={option}>{option}</option>
-                            ))}
-                        </select>
-                    </div> */}
+                
 
                     <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
                         <div style={{ position: 'relative' }}>
@@ -161,60 +138,19 @@ export default function SamplesPage() {
                 <p className="text-gray-400 text-sm">{filteredSamples.length} samples</p>
             </div>
 
-            {/* Samples List */}
-            {/* <div className="">
-                {filteredSamples.map((sample) => (
-                    <div
-                        key={sample.id}
-                        className="bg-white border border-gray-200 p-6 hover:shadow-md transition cursor-pointer"
-                        onClick={() => handleRowClick(sample)}
-                    >
-
-                            <div className="flex flex-row justify-between">
-                                
-                                <div className="flex items-baseline mb-2">
-                                    <h3 className="text-2xl font-bold text-gray-900">{sample.id}</h3>
-                                    <span className="text-sm text-gray-500">{sample.customer}</span>
-                                </div>
-
-                                <div className="flex items-center gap-12">
-                                    <div>
-                                        <p className="text-lg text-black font-bold">{sample.batchId}</p>
-                                        <p className="text-xs text-cyan-500">Batch</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-lg text-black font-bold">{sample.slides}</p>
-                                        <p className="text-xs text-cyan-500">Slides</p>
-                                    </div>
-                                </div>
-
-                            <div className="flex items-center gap-6 ml-8">
-                                <span className={`px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap ${actionStatusColorMap[sample.actionStatus] || "bg-gray-100 text-gray-700"}`}>
-                                    {sample.actionStatus}
-                                </span>
-                                <button 
-                                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-600 hover:text-gray-800"
-                                >
-                                    <IoMdArrowRoundForward size={20} className="text-gray-600" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div> */}
 
 
-            <div className="bg-white border border-gray-200 overflow-hidden">
+            <div className="bg-white border border-gray-300 overflow-hidden">
                 <table className="w-full text-sm">
 
                     <tbody>
                         {filteredSamples.map((sample, index) => (
                             <tr
                                 key={sample.id}
-                                className={`border-t border-gray-100 hover:bg-gray-50 transition bg-white`}
+                                className={`border-t border-gray-300 hover:bg-gray-50 transition bg-white`}
                                 onClick={() => handleRowClick(sample)}
                             >
-                                <td className="flex items-baseline mb-2 px-6 py-4">
+                                <td className="flex gap-4 items-baseline mb-2 px-6 py-4">
                                     <h3 className="text-2xl font-semibold text-gray-900">{sample.id}</h3>
                                     <span className="text-sm text-gray-500">{sample.customer}</span>
                                 </td>
