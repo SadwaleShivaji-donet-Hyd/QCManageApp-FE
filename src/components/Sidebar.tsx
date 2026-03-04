@@ -1,180 +1,159 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import logo from "../assets/logo.png";
+import { useState, useRef, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import logo from '../assets/logo.png';
 
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
-  onNewClick: () => void;
+  onOpenAccession: () => void;
+  onOpenBatch: () => void;
 }
 
 const BatchIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    viewBox="0 0 24 24"
-  >
-    <rect x="3" y="3" width="7" height="7" rx="1" />
-    <rect x="14" y="3" width="7" height="7" rx="1" />
-    <rect x="3" y="14" width="7" height="7" rx="1" />
-    <rect x="14" y="14" width="7" height="7" rx="1" />
+  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
+    <rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
   </svg>
 );
 const SamplesIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    viewBox="0 0 24 24"
-  >
-    <line x1="3" y1="6" x2="21" y2="6" />
-    <line x1="3" y1="12" x2="21" y2="12" />
-    <line x1="3" y1="18" x2="21" y2="18" />
+  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
   </svg>
 );
 const SlidesIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    viewBox="0 0 24 24"
-  >
+  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
     <rect x="2" y="3" width="20" height="14" rx="2" />
-    <line x1="8" y1="21" x2="16" y2="21" />
-    <line x1="12" y1="17" x2="12" y2="21" />
+    <line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" />
   </svg>
 );
 const LogoutIcon = () => (
-  <svg
-    width="17"
-    height="17"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-    />
-  </svg>
-);
-const PlusIcon = () => (
-  <svg
-    width="15"
-    height="15"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    viewBox="0 0 24 24"
-  >
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
+  <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round"
+      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
   </svg>
 );
 const ScanIcon = () => (
-  <svg
-    width="15"
-    height="15"
-    fill="none"
-    stroke="rgba(255,255,255,0.6)"
-    strokeWidth="2"
-    viewBox="0 0 24 24"
-  >
+  <svg width="15" height="15" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="2" viewBox="0 0 24 24">
     <path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2" />
     <rect x="7" y="7" width="10" height="10" rx="1" />
   </svg>
 );
+const ChevronDown = () => (
+  <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+const PlusIcon = () => (
+  <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+    <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);
 
 const navItems = [
-  { label: "Batches", path: "/batches", icon: <BatchIcon /> },
-  { label: "Samples", path: "/samples", icon: <SamplesIcon /> },
-  { label: "Slides", path: "/slides", icon: <SlidesIcon /> },
+  { label: 'Batches', path: '/batches', icon: <BatchIcon /> },
+  { label: 'Samples', path: '/samples', icon: <SamplesIcon /> },
+  { label: 'Slides',  path: '/slides',  icon: <SlidesIcon /> },
 ];
 
-const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
-  const { session, logout } = useAuth();
+const Sidebar = ({
+  collapsed,
+  onToggle,
+  onOpenAccession,
+  onOpenBatch,
+}: SidebarProps) => {
+  const { username, role, logout } = useAuth();
   const navigate = useNavigate();
+const [showNewDropdown, setShowNewDropdown] = useState(false);
+const dropdownRef = useRef<HTMLDivElement | null>(null);
+  // const [newOpen, setNewOpen] = useState(false);
+  // const newRef = useRef<HTMLDivElement>(null);
 
-  const handleLogout = () => {
-    logout();
+  const avatarChar = (username ?? role ?? "U").charAt(0).toUpperCase();
+
+  // Close dropdown on outside click
+ useEffect(() => {
+   const close = (e: MouseEvent) => {
+     if (
+       dropdownRef.current &&
+       !dropdownRef.current.contains(e.target as Node)
+     ) {
+       setShowNewDropdown(false);
+     }
+   };
+
+   if (showNewDropdown) {
+     document.addEventListener("mousedown", close);
+   }
+
+   return () => document.removeEventListener("mousedown", close);
+ }, [showNewDropdown]);
+
+  const handleLogout = async () => {
+    await logout();
     navigate("/");
   };
 
   return (
     <>
       <style>{`
-        .sb-search::placeholder { color: rgba(255,255,255,0.4); }
-        .sb-nav-link:hover { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
-        .sb-new-btn:hover { background: rgba(255,255,255,0.28) !important; }
-        .sb-logout:hover { color: #fff !important; }
-        .sb-toggle:hover { background: rgba(255,255,255,0.15) !important; }
+        .sb-search::placeholder { color: rgba(0,0,0,0.35); }
+        .sb-nav-link:hover  { background: #f3f4f6 !important; color: #111827 !important; }
+        .sb-new-btn:hover   { background: #f3f4f6 !important; }
+        .sb-logout:hover    { color: #111827 !important; }
+        .sb-toggle:hover    { background: rgba(0,0,0,0.06) !important; }
+        .sb-new-item:hover  { background: #f5f3ff !important; color: #6d28d9 !important; }
+        @keyframes sbDdIn   { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
       `}</style>
 
       <aside
         style={{
-          width: collapsed ? 68 : 210,
+          width: collapsed ? 68 : 240,
           height: "100vh",
-          background: "linear-gradient(180deg, #3730a3 0%, #4338ca 100%)",
+          background: "#ffffff",
+          borderRight: "1px solid #e5e7eb",
           display: "flex",
           flexDirection: "column",
           transition: "width 0.25s cubic-bezier(.4,0,.2,1)",
           overflow: "hidden",
           flexShrink: 0,
+          boxShadow: "2px 0 8px rgba(0,0,0,0.04)",
         }}
       >
-        {/* Logo + toggle arrow */}
+        {/* ── Logo + toggle ── */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: collapsed ? "center" : "space-between",
             padding: "0 14px",
-            height: 64,
+            height: 68,
             flexShrink: 0,
+            borderBottom: "1px solid #f3f4f6",
           }}
         >
           {!collapsed && (
-            <div
+            <img
+              src={logo}
+              alt="QuantumCyte"
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                overflow: "hidden",
+                height: 32,
+                width: "auto",
+                maxWidth: 150,
+                objectFit: "contain",
+                flexShrink: 0,
               }}
-            >
-              <img
-                src={logo}
-                alt="QuantumCyte"
-                style={{
-                  height: 28,
-                  width: "auto",
-                  maxWidth: 140,
-                  objectFit: "contain",
-                  flexShrink: 0,
-                }}
-                onError={(e) => {
-                  const el = e.target as HTMLImageElement;
-                  el.style.display = "none";
-                  const span = document.createElement("span");
-                  span.textContent = "QuantumCyte";
-                  span.style.cssText =
-                    "color:#fff;font-weight:700;font-size:15px;white-space:nowrap;";
-                  el.parentNode?.appendChild(span);
-                }}
-              />
-            </div>
+              onError={(e) => {
+                const el = e.target as HTMLImageElement;
+                el.style.display = "none";
+                const span = document.createElement("span");
+                span.textContent = "QuantumCyte";
+                span.style.cssText =
+                  "color:#111827;font-weight:700;font-size:15px;white-space:nowrap;";
+                el.parentNode?.appendChild(span);
+              }}
+            />
           )}
-
-          {/* Arrow toggle — always visible in header row */}
           <button
             className="sb-toggle"
             onClick={onToggle}
@@ -183,7 +162,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "rgba(255,255,255,0.75)",
+              color: "#9ca3af",
               padding: 6,
               borderRadius: 7,
               display: "flex",
@@ -211,12 +190,13 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
           </button>
         </div>
 
-        {/* Search */}
+        {/* ── Search ── */}
         {!collapsed && (
-          <div style={{ padding: "0 12px 14px" }}>
+          <div style={{ padding: "14px 12px 10px" }}>
             <div
               style={{
-                background: "rgba(255,255,255,0.13)",
+                background: "#f9fafb",
+                border: "1px solid #e5e7eb",
                 borderRadius: 20,
                 display: "flex",
                 alignItems: "center",
@@ -228,7 +208,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                 width="13"
                 height="13"
                 fill="none"
-                stroke="rgba(255,255,255,0.6)"
+                stroke="#9ca3af"
                 strokeWidth="2"
                 viewBox="0 0 24 24"
               >
@@ -242,7 +222,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   background: "none",
                   border: "none",
                   outline: "none",
-                  color: "#fff",
+                  color: "#111827",
                   fontSize: 13,
                   width: "100%",
                   fontFamily: "inherit",
@@ -253,35 +233,105 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
           </div>
         )}
 
-        {/* New button */}
-        <div style={{ padding: collapsed ? "0 10px 16px" : "0 12px 16px" }}>
+        {/* ── New button + dropdown ── */}
+        <div
+          ref={dropdownRef}
+          style={{
+            padding: collapsed ? "0 10px 16px" : "0 12px 16px",
+            position: "relative",
+          }}
+        >
           <button
             className="sb-new-btn"
-            onClick={onNewClick}
+            onClick={() => setShowNewDropdown((s) => !s)}
             style={{
               width: "100%",
+              
               background: "rgba(255,255,255,0.18)",
               border: "none",
               borderRadius: 20,
-              color: "#fff",
+              color: "#000",
               fontWeight: 600,
               fontSize: 14,
               padding: collapsed ? "9px 0" : "9px 16px",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
-              justifyContent: collapsed ? "center" : "flex-start",
+              justifyContent: collapsed ? "center" : "space-between",
               gap: 8,
-              transition: "background 0.15s",
-              fontFamily: "inherit",
             }}
           >
-            <PlusIcon />
-            {!collapsed && "New"}
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <PlusIcon />
+              {!collapsed && "New"}
+            </div>
+
+            {!collapsed && (
+              <span
+                style={{
+                  transform: showNewDropdown ? "rotate(90deg)" : "none",
+                  transition: "0.2s",
+                }}
+              >
+                ›
+              </span>
+            )}
           </button>
+
+          {!collapsed && showNewDropdown && (
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 12,
+                right: 12,
+                marginTop: 8,
+                background: "#fff",
+                borderRadius: 14,
+                boxShadow: "0 15px 40px rgba(0,0,0,0.18)",
+                overflow: "hidden",
+                zIndex: 50,
+              }}
+            >
+              <button
+                onClick={() => {
+                  setShowNewDropdown(false);
+                  onOpenAccession();
+                }}
+                style={{
+                  width: "100%",
+                  padding: "14px 18px",
+                  border: "none",
+                  background: "#fff",
+                  textAlign: "left",
+                  cursor: "pointer",
+                }}
+              >
+                New Accession
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowNewDropdown(false);
+                  onOpenBatch();
+                }}
+                style={{
+                  width: "100%",
+                  padding: "14px 18px",
+                  borderTop: "1px solid #f3f4f6",
+                  border: "none",
+                  background: "#fff",
+                  textAlign: "left",
+                  cursor: "pointer",
+                }}
+              >
+                New Batch
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Nav links */}
+        {/* ── Nav ── */}
         <nav style={{ flex: 1, padding: "0 8px", overflowY: "auto" }}>
           {navItems.map((item) => (
             <NavLink
@@ -292,12 +342,12 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                 display: "flex",
                 alignItems: "center",
                 gap: 12,
-                padding: collapsed ? "10px 0" : "10px 12px",
+                padding: collapsed ? "10px 0" : "10px 14px",
                 justifyContent: collapsed ? "center" : "flex-start",
                 borderRadius: 10,
                 marginBottom: 2,
-                color: isActive ? "#fff" : "rgba(255,255,255,0.65)",
-                background: isActive ? "rgba(255,255,255,0.18)" : "transparent",
+                color: isActive ? "#111827" : "#6b7280",
+                background: isActive ? "#f3f4f6" : "transparent",
                 textDecoration: "none",
                 fontSize: 14,
                 fontWeight: isActive ? 600 : 400,
@@ -312,10 +362,10 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
           ))}
         </nav>
 
-        {/* User + logout */}
+        {/* ── User + logout ── */}
         <div
           style={{
-            borderTop: "1px solid rgba(255,255,255,0.12)",
+            borderTop: "1px solid #f3f4f6",
             padding: collapsed ? "14px 0" : "14px",
             flexShrink: 0,
           }}
@@ -335,22 +385,22 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                     width: 36,
                     height: 36,
                     borderRadius: "50%",
-                    background: "rgba(255,255,255,0.22)",
+                    background: "#ede9fe",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#fff",
+                    color: "#6d28d9",
                     flexShrink: 0,
                   }}
                 >
-                  {session?.role?.charAt(0).toUpperCase() ?? "U"}
+                  {avatarChar}
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <div
                     style={{
-                      color: "#fff",
+                      color: "#111827",
                       fontSize: 13,
                       fontWeight: 600,
                       whiteSpace: "nowrap",
@@ -358,16 +408,16 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                       textOverflow: "ellipsis",
                     }}
                   >
-                    MadScientist
+                    {username ?? "User"}
                   </div>
                   <div
                     style={{
-                      color: "rgba(255,255,255,0.55)",
+                      color: "#9ca3af",
                       fontSize: 11,
                       textTransform: "capitalize",
                     }}
                   >
-                    {session?.role ?? "Lab Tech"}
+                    {role ?? "Lab Tech"}
                   </div>
                 </div>
               </div>
@@ -381,7 +431,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "rgba(255,255,255,0.6)",
+                  color: "#9ca3af",
                   fontSize: 13,
                   padding: "5px 2px",
                   borderRadius: 6,
@@ -407,16 +457,16 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   width: 32,
                   height: 32,
                   borderRadius: "50%",
-                  background: "rgba(255,255,255,0.22)",
+                  background: "#ede9fe",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: 13,
                   fontWeight: 700,
-                  color: "#fff",
+                  color: "#6d28d9",
                 }}
               >
-                {session?.role?.charAt(0).toUpperCase() ?? "U"}
+                {avatarChar}
               </div>
               <button
                 className="sb-logout"
@@ -426,7 +476,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "rgba(255,255,255,0.6)",
+                  color: "#9ca3af",
                   display: "flex",
                   transition: "color 0.15s",
                 }}

@@ -12,7 +12,7 @@ import {
   CircleAlert,
   Tag,
 } from "lucide-react";
-import { CiExport } from "react-icons/ci";
+
 import { Upload } from "lucide-react";
 import {
   createSample,
@@ -284,8 +284,8 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-[720px] max-w-[95vw] max-h-[90vh] overflow-hidden flex flex-col mt-[5vh]">
+    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50">
+      <div className="bg-white rounded-2xl shadow-2xl w-[720px] max-w-[95vw] max-h-[90vh] overflow-hidden flex flex-col mt-[5vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-8 py-5 border-b border-[#e6e6e6] shrink-0">
           <h2 className="text-[28px] tracking-tight font-bold leading-[1.2]">
@@ -536,7 +536,7 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
 
                       {/* Slides Dropdown */}
                       {sample.expanded && (
-                        <div className="border-t px-4 py-4 space-y-4">
+                        <div className="border-t border-[#e6e6e6] px-4 py-4 space-y-4">
                           {/* Slides */}
                           {sample.slides.map((slide) => (
                             <div
@@ -552,11 +552,17 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
 
                                 {/* Right Controls */}
                                 <div className="flex items-center gap-3">
-                                  <button className="px-2 py-0.5 border border-[#d9d9d9] rounded text-xs whitespace-nowrap hover:bg-[#f5f5f5] transition-colors">
+                                  <button
+                                    type="button"
+                                    className="px-2 py-0.5 border border-[#d9d9d9] rounded text-xs cursor-pointer transition-colors whitespace-nowrap hover:bg-[#f5f5f5]"
+                                  >
                                     Annotations
                                   </button>
 
-                                  <button className="px-2 py-0.5 border border-[#d9d9d9] rounded text-xs whitespace-nowrap hover:bg-[#f5f5f5] transition-colors">
+                                  <button
+                                    type="button"
+                                    className="px-2 py-0.5 border border-[#d9d9d9] rounded text-xs cursor-pointer transition-colors whitespace-nowrap hover:bg-[#f5f5f5]"
+                                  >
                                     40x Scan
                                   </button>
 
@@ -637,7 +643,10 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
                                   {slide.tags.map((tag) => (
                                     <span
                                       key={tag}
-                                      className="flex items-center gap-1 bg-orange-100 text-orange-700 border border-orange-300 text-xs px-2 py-1 rounded-md"
+                                      className="inline-flex items-center gap-1 px-2 py-0.5 
+             bg-amber-50 border border-amber-200 
+             text-amber-700 rounded text-xs 
+             cursor-pointer hover:bg-amber-100 transition-colors"
                                     >
                                       {tag}
                                       <button
@@ -771,7 +780,10 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
                 <div className="mt-4 flex justify-center pb-6">
                   <button
                     onClick={addSample}
-                    className="flex items-center gap-2 rounded-md border border-black px-4 py-1.5 text-xs hover:bg-black hover:text-white"
+                    className="flex items-center gap-2 px-4 py-2 
+             bg-[#e3e3e3] border border-[#767676] 
+             rounded-lg cursor-pointer 
+             hover:bg-[#d5d5d5] transition-colors text-sm"
                   >
                     <Plus size={14} />
                     Add Sample
@@ -792,7 +804,7 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
               </div>
 
               {/* Customer Info */}
-              <div className="rounded-2xl border bg-gray-100/60 p-6 shadow-sm">
+              <div className="rounded-2xl border-t border-gray-300 bg-gray-100/60 p-6 shadow-sm">
                 {/* Top Grid */}
                 <div className="grid grid-cols-3 gap-6">
                   <div>
@@ -850,10 +862,10 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
                 {samples.map((sample) => (
                   <div
                     key={sample.id}
-                    className="rounded-xl border bg-white shadow-sm"
+                    className="rounded-xl border-t border-gray-200 bg-white shadow-sm"
                   >
                     {/* Header */}
-                    <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50 rounded-t-xl">
+                    <div className="flex items-center justify-between px-4 py-3  bg-gray-50 rounded-t-xl">
                       <span className="font-semibold text-gray-800">
                         Sample {sample.sampleId || "—"}
                       </span>
@@ -868,14 +880,34 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
                       {sample.slides.length > 0 ? (
                         <>
                           {/* Slide Pills */}
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-3">
                             {sample.slides.map((slide) => (
-                              <span
+                              <div
                                 key={slide.id}
-                                className="px-3 py-1 text-sm bg-gray-100 rounded-md text-gray-700"
+                                className="bg-gray-100 rounded-lg px-3 py-2"
                               >
-                                {slide.slideId || "Slide —"}
-                              </span>
+                                {/* Slide ID */}
+                                <div className="text-sm font-medium text-gray-800">
+                                  {slide.slideId || "Slide —"}
+                                </div>
+
+                                {/* Tags */}
+                                {slide.tags && slide.tags.length > 0 && (
+                                  <div className="flex flex-wrap gap-2 mt-2">
+                                    {slide.tags.map((tag) => (
+                                      <span
+                                        key={tag}
+                                        className="nline-flex items-center gap-1 px-2 py-0.5 
+             bg-amber-50 border border-amber-200 
+             text-amber-700 rounded text-xs 
+             cursor-pointer hover:bg-amber-100 transition-colors"
+                                      >
+                                        {tag}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
                             ))}
                           </div>
                         </>
@@ -906,18 +938,18 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t px-6 py-4">
+        <div className="flex items-center justify-between px-8 py-4 border-t border-[#e6e6e6] shrink-0 bg-white">
           {currentStep === 1 ? (
             <>
               <button
                 onClick={handleClose}
                 disabled={isLoading}
-                className="text-sm font-medium text-gray-700 hover:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-5 py-2 cursor-pointer hover:text-[#06748c] transition-colors"
               >
                 Cancel
               </button>
 
-              <span className="text-xs text-gray-500">
+              <span className="text-sm text-[#757575]">
                 {samples.length} sample
                 {samples.length !== 1 ? "s" : ""}, {totalSlides} slide
                 {totalSlides !== 1 ? "s" : ""}
@@ -926,7 +958,7 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
               <button
                 onClick={handleNext}
                 disabled={isLoading}
-                className="flex items-center gap-2 rounded-md bg-black px-6 py-2 text-sm text-white hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="px-6 py-2.5 bg-[#1e1e1e] text-white rounded-lg cursor-pointer hover:bg-[#333] transition-colors"
               >
                 Next
               </button>
@@ -936,7 +968,7 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
               <button
                 onClick={handleBack}
                 disabled={isLoading}
-                className="text-sm font-medium text-gray-700 hover:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-5 py-2 cursor-pointer hover:text-[#06748c] transition-colors"
               >
                 Back
               </button>
