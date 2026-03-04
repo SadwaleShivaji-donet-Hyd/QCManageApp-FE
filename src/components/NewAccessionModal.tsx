@@ -284,8 +284,8 @@ const NewAccessionModal = ({ open, onOpenChange }: NewAccessionModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50">
-      <div className="bg-white rounded-2xl shadow-2xl w-[720px] max-w-[95vw] max-h-[90vh] overflow-hidden flex flex-col mt-[5vh]">
+    <div className="fixed inset-0 z-[100] h-full w-full flex items-start justify-center bg-black/50">
+      <div className="bg-white rounded-2xl w-[50vw] shadow-2xl max-w-[95vw] max-h-[90vh] overflow-hidden flex flex-col mt-[5vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-8 py-5 border-b border-[#e6e6e6] shrink-0">
           <h2 className="text-[28px] tracking-tight font-bold leading-[1.2]">

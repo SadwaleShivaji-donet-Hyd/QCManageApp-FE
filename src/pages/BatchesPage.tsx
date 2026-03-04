@@ -19,7 +19,7 @@ const generateMockBatches = (): Batch[] => {
     "Archived",
   ];
 
-  return Array.from({ length: 160 }, (_, i) => ({
+  return Array.from({ length: 6 }, (_, i) => ({
     id: (3818850 + i).toString().padStart(9, "0"),
     slides: Math.floor(Math.random() * 40) + 10,
     samples: Math.floor(Math.random() * 5) + 1,
@@ -59,11 +59,11 @@ const BatchesPage = () => {
   /* ---------- FILTER + SORT ---------- */
   const filtered = useMemo(() => {
     return MOCK_BATCHES.filter(
-      (b) => statusFilter === "All Statuses" || b.status === statusFilter
+      (b) => statusFilter === "All Statuses" || b.status === statusFilter,
     ).sort((a, b) =>
       sortAsc
         ? a.status.localeCompare(b.status)
-        : b.status.localeCompare(a.status)
+        : b.status.localeCompare(a.status),
     );
   }, [statusFilter, sortAsc]);
 
@@ -73,11 +73,10 @@ const BatchesPage = () => {
 
   const paginated = filtered.slice(
     (currentPage - 1) * perPage,
-    currentPage * perPage
+    currentPage * perPage,
   );
 
-  const startItem =
-    totalItems === 0 ? 0 : (currentPage - 1) * perPage + 1;
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * perPage + 1;
   const endItem = Math.min(currentPage * perPage, totalItems);
 
   return (
@@ -97,9 +96,7 @@ const BatchesPage = () => {
           <select
             value={statusFilter}
             onChange={(e) => {
-              setStatusFilter(
-                e.target.value as BatchStatus | "All Statuses"
-              );
+              setStatusFilter(e.target.value as BatchStatus | "All Statuses");
               setCurrentPage(1);
             }}
             style={{
@@ -150,30 +147,22 @@ const BatchesPage = () => {
               alignItems: "center",
               padding: "14px 18px",
               borderBottom:
-                idx < paginated.length - 1
-                  ? "1px solid #f3f4f6"
-                  : "none",
+                idx < paginated.length - 1 ? "1px solid #f3f4f6" : "none",
               cursor: "pointer",
             }}
           >
-            <div style={{ fontWeight: 800, minWidth: 120 }}>
-              {batch.id}
-            </div>
+            <div style={{ fontWeight: 800, minWidth: 120 }}>{batch.id}</div>
 
             <div style={{ flex: 1 }} />
 
             <div style={{ textAlign: "center", minWidth: 80 }}>
               <div style={{ fontWeight: 700 }}>{batch.slides}</div>
-              <div style={{ fontSize: 11, color: "#0891b2" }}>
-                Slides
-              </div>
+              <div style={{ fontSize: 11, color: "#0891b2" }}>Slides</div>
             </div>
 
             <div style={{ textAlign: "center", minWidth: 80 }}>
               <div style={{ fontWeight: 700 }}>{batch.samples}</div>
-              <div style={{ fontSize: 11, color: "#0891b2" }}>
-                Samples
-              </div>
+              <div style={{ fontSize: 11, color: "#0891b2" }}>Samples</div>
             </div>
 
             <div style={{ minWidth: 120, textAlign: "right" }}>
@@ -237,32 +226,26 @@ const BatchesPage = () => {
         <div style={{ display: "flex", gap: 6 }}>
           <button
             disabled={currentPage === 1}
-            onClick={() =>
-              setCurrentPage((p) => Math.max(p - 1, 1))
-            }
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
           >
             ‹
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-            (page) => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                style={{
-                  fontWeight: currentPage === page ? 700 : 400,
-                }}
-              >
-                {page}
-              </button>
-            )
-          )}
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              style={{
+                fontWeight: currentPage === page ? 700 : 400,
+              }}
+            >
+              {page}
+            </button>
+          ))}
 
           <button
             disabled={currentPage === totalPages}
-            onClick={() =>
-              setCurrentPage((p) => Math.min(p + 1, totalPages))
-            }
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
           >
             ›
           </button>
@@ -272,4 +255,4 @@ const BatchesPage = () => {
   );
 };
 
-export default BatchesPage; 
+export default BatchesPage;
