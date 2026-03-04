@@ -1,3 +1,5 @@
+import type { SlideStatus } from "./slide";
+
 export type SampleStatus =
   | "Requested"
   | "5x Alignment Scan"
@@ -24,7 +26,7 @@ export interface Sample {
 
 export interface Slide {
   id: string;
-  status: SampleStatus;
+  status: SlideStatus;
   hasWarning?: boolean;
 }
 

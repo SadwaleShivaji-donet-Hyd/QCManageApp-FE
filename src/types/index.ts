@@ -33,3 +33,28 @@ export interface CreateBatchResponse {
   error?: string;
   details?: string;
 }
+
+
+export interface Slide {
+  slide_id: string;
+  sample_id: string;
+  current_state: string;
+  created_at: string;
+  created_by: string;
+}
+
+export interface SlideEvent {
+  event_id: string;
+  event_type: string;
+  slide_id: string;
+  batch_id: string | null;
+  sample_id: string;
+  previous_state: string | null;
+  new_state: string | null;
+  triggered_by: string;
+  timestamp: string;
+  correlation_id: string;
+  error_category: string | null;
+  error_detail: string | null;
+  metadata: Record<string, unknown> | null;
+}

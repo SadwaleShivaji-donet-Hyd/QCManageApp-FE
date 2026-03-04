@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import logo from '../assets/logo.png';
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -29,19 +30,7 @@ const SlidesIcon = () => (
 );
 const LogoutIcon = () => (
   <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round"
-      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-  </svg>
-);
-const ScanIcon = () => (
-  <svg width="15" height="15" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="2" viewBox="0 0 24 24">
-    <path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2" />
-    <rect x="7" y="7" width="10" height="10" rx="1" />
-  </svg>
-);
-const ChevronDown = () => (
-  <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-    <polyline points="6 9 12 15 18 9" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
   </svg>
 );
 const PlusIcon = () => (
@@ -49,11 +38,17 @@ const PlusIcon = () => (
     <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
   </svg>
 );
+const ScanIcon = () => (
+  <svg width="15" height="15" fill="none" stroke="rgba(0, 0, 0, 0.6)" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2" />
+    <rect x="7" y="7" width="10" height="10" rx="1" />
+  </svg>
+);
 
 const navItems = [
   { label: 'Batches', path: '/batches', icon: <BatchIcon /> },
   { label: 'Samples', path: '/samples', icon: <SamplesIcon /> },
-  { label: 'Slides',  path: '/slides',  icon: <SlidesIcon /> },
+  { label: 'Slides', path: '/slides', icon: <SlidesIcon /> },
 ];
 
 const Sidebar = ({
@@ -97,30 +92,28 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
   return (
     <>
       <style>{`
-        .sb-search::placeholder { color: rgba(0,0,0,0.35); }
-        .sb-nav-link:hover  { background: #f3f4f6 !important; color: #111827 !important; }
-        .sb-new-btn:hover   { background: #f3f4f6 !important; }
-        .sb-logout:hover    { color: #111827 !important; }
-        .sb-toggle:hover    { background: rgba(0,0,0,0.06) !important; }
-        .sb-new-item:hover  { background: #f5f3ff !important; color: #6d28d9 !important; }
-        @keyframes sbDdIn   { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+        .sb-search::placeholder { color: rgba(255,255,255,0.4); }
+        .sb-nav-link:hover { background: rgba(255,255,255,0.1) !important; color: black !important; }
+        .sb-new-btn:hover { background: rgba(255,255,255,0.28) !important; }
+        .sb-logout:hover { color: #fff !important; }
+        .sb-toggle:hover { background: rgba(255,255,255,0.15) !important; }
       `}</style>
 
       <aside
         style={{
           width: collapsed ? 68 : 240,
           height: "100vh",
-          background: "#ffffff",
-          borderRight: "1px solid #e5e7eb",
+          // background: "linear-gradient(180deg, #3730a3 0%, #4338ca 100%)",
+          backgroundColor: "white",
           display: "flex",
           flexDirection: "column",
           transition: "width 0.25s cubic-bezier(.4,0,.2,1)",
           overflow: "hidden",
           flexShrink: 0,
-          boxShadow: "2px 0 8px rgba(0,0,0,0.04)",
+          boxShadow: "4px 0 10px rgba(0, 0, 0, 0.08)",
         }}
       >
-        {/* ── Logo + toggle ── */}
+        {/* Logo + toggle arrow */}
         <div
           style={{
             display: "flex",
@@ -133,28 +126,39 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
           }}
         >
           {!collapsed && (
-            <img
-              src={logo}
-              alt="QuantumCyte"
+            <div
               style={{
-                height: 32,
-                width: "auto",
-                maxWidth: 150,
-                objectFit: "contain",
-                flexShrink: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                overflow: "hidden",
               }}
-              onError={(e) => {
-                const el = e.target as HTMLImageElement;
-                el.style.display = "none";
-                const span = document.createElement("span");
-                span.textContent = "QuantumCyte";
-                span.style.cssText =
-                  "color:#111827;font-weight:700;font-size:15px;white-space:nowrap;";
-                el.parentNode?.appendChild(span);
-              }}
-            />
+            >
+              <img
+                src={logo}
+                alt="QuantumCyte"
+                style={{
+                  height: 48,
+                  width: "auto",
+                  maxWidth: 140,
+                  objectFit: "contain",
+                  flexShrink: 0,
+                }}
+                onError={(e) => {
+                  const el = e.target as HTMLImageElement;
+                  el.style.display = "none";
+                  const span = document.createElement("span");
+                  span.textContent = "QuantumCyte";
+                  span.style.cssText =
+                    "color:#fff;font-weight:700;font-size:15px;white-space:nowrap;";
+                  el.parentNode?.appendChild(span);
+                }}
+              />
+            </div>
           )}
-          <button
+
+          {/* Arrow toggle — always visible in header row */}
+          {/* <button
             className="sb-toggle"
             onClick={onToggle}
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -162,7 +166,7 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "#9ca3af",
+              color: "#1E1E1E",
               padding: 6,
               borderRadius: 7,
               display: "flex",
@@ -187,16 +191,16 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
             >
               <polyline points="15 18 9 12 15 6" />
             </svg>
-          </button>
+          </button> */}
         </div>
 
         {/* ── Search ── */}
         {!collapsed && (
-          <div style={{ padding: "14px 12px 10px" }}>
+          <div style={{ padding: "0 12px 14px" }}>
             <div
+              className="border border-black/10"
               style={{
-                background: "#f9fafb",
-                border: "1px solid #e5e7eb",
+                background: "rgba(255, 255, 255, 0.13)",
                 borderRadius: 20,
                 display: "flex",
                 alignItems: "center",
@@ -204,17 +208,17 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
                 padding: "8px 11px",
               }}
             >
-              <svg
+              {/* <svg
                 width="13"
                 height="13"
                 fill="none"
-                stroke="#9ca3af"
+                stroke="#1E1E1E"
                 strokeWidth="2"
                 viewBox="0 0 24 24"
               >
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
+              </svg> */}
               <input
                 className="sb-search"
                 placeholder="Search"
@@ -222,7 +226,7 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
                   background: "none",
                   border: "none",
                   outline: "none",
-                  color: "#111827",
+                  color: "#1E1E1E",
                   fontSize: 13,
                   width: "100%",
                   fontFamily: "inherit",
@@ -246,7 +250,7 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
             onClick={() => setShowNewDropdown((s) => !s)}
             style={{
               width: "100%",
-              
+
               background: "rgba(255,255,255,0.18)",
               border: "none",
               borderRadius: 20,
@@ -346,8 +350,8 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
                 justifyContent: collapsed ? "center" : "flex-start",
                 borderRadius: 10,
                 marginBottom: 2,
-                color: isActive ? "#111827" : "#6b7280",
-                background: isActive ? "#f3f4f6" : "transparent",
+                color: "#1E1E1E",
+                background: isActive ? "#F0F0F0" : "transparent",
                 textDecoration: "none",
                 fontSize: 14,
                 fontWeight: isActive ? 600 : 400,
@@ -370,6 +374,40 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
             flexShrink: 0,
           }}
         >
+          <button
+            className="sb-toggle mx-auto"
+            onClick={onToggle}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "#1E1E1E",
+              padding: 6,
+              borderRadius: 7,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              marginLeft: collapsed ? 0 : 4,
+              transition: "background 0.15s",
+            }}
+          >
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              viewBox="0 0 24 24"
+              style={{
+                transform: collapsed ? "rotate(180deg)" : "none",
+                transition: "transform 0.25s",
+              }}
+            >
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
           {!collapsed ? (
             <>
               <div
@@ -412,7 +450,7 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
                   </div>
                   <div
                     style={{
-                      color: "#9ca3af",
+                      color: "#1E1E1E",
                       fontSize: 11,
                       textTransform: "capitalize",
                     }}
@@ -421,6 +459,7 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
                   </div>
                 </div>
               </div>
+
               <button
                 className="sb-logout"
                 onClick={handleLogout}
@@ -431,7 +470,7 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "#9ca3af",
+                  color: "#1E1E1E",
                   fontSize: 13,
                   padding: "5px 2px",
                   borderRadius: 6,
@@ -463,7 +502,7 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
                   justifyContent: "center",
                   fontSize: 13,
                   fontWeight: 700,
-                  color: "#6d28d9",
+                  color: "#1E1E1E",
                 }}
               >
                 {avatarChar}
@@ -476,7 +515,7 @@ const dropdownRef = useRef<HTMLDivElement | null>(null);
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "#9ca3af",
+                  color: "#1E1E1E",
                   display: "flex",
                   transition: "color 0.15s",
                 }}

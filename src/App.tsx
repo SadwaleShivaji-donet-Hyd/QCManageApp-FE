@@ -14,27 +14,28 @@ import BatchesPage from "./pages/BatchesPage";
 import SamplesPage from "./pages/SamplesPage";
 import SlidesPage from "./pages/SlidesPage";
 import SamplesDetailsPage from "./pages/SampleDetailsPage";
-import NewAccessionModal from "./components/NewAccessionModal";
+import SlideDetailPage from "./pages/SlideDetailPage";
+import SlideDetails from "./pages/SlideDetails";
 function App() {
   return (
     <AuthProvider>
       <ToastProvider>
         <Router>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Login />} />
             <Route element={<ProtectedRoute />}>
               <Route element={<Layout />}>
-                <Route path="/" element={<Navigate to="/batches" replace />} />
+                {/* <Route path="/" element={<Login/>} /> */}
                 <Route path="/batches" element={<BatchesPage />} />
                 <Route path="/batches/:id" element={<BatchesPage />} />
                 <Route path="/samples" element={<SamplesPage />} />
                 <Route path="/sample-details/:sampleId" element={<SamplesDetailsPage />} />
                 <Route path="/slides" element={<SlidesPage />} />
-              
-
+                <Route path="/samples/:sampleId/slide-details/:slideId" element={<SlideDetails/>} />
+                <Route path="/slides/:id" element={<SlideDetailPage />} />
               </Route>
             </Route>
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
           </Routes>
         </Router>
         <ToastDisplay />
