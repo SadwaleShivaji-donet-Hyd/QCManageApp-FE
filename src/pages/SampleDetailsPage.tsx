@@ -159,17 +159,17 @@ export default function SampleDetailsPage() {
     };
 
     const updateSelectedSlideStatus = (newStatus: string) => {
-        setSlides((prevSlides) =>
-            prevSlides.map((slide) =>
-                selectedSlides.includes(slide.id)
-                    ? { ...slide, status: newStatus }
-                    : slide
-            )
-        );
-        setUpdateStatusVisible(false);
-        setSelectedSlides([]);
+      setSlides((prevSlides) =>
+        prevSlides.map((slide) =>
+          selectedSlides.includes(slide.id)
+            ? { ...slide, status: newStatus }
+            : slide,
+        ),
+      );
+      setUpdateStatusVisible(false);
+      setSelectedSlides([]);
     };
-
+ 
     const excludeSelectedSlideStatus = () => {
         setSlides((prevSlides) =>
             prevSlides.map((slide) =>

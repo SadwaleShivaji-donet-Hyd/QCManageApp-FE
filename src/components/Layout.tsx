@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import NewAccessionModal from "../components/NewAccessionModal";
+import NewBatchModal from "../components/NewBatchModal";
 const SIDEBAR_FULL = 210;
 const SIDEBAR_COLLAPSED = 68;
 const MOBILE_BP = 768;
@@ -11,6 +12,7 @@ const Layout = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BP);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isAccessionOpen, setIsAccessionOpen] = useState(false);
+  const [isBatchOpen, setIsBatchOpen] = useState(false);
   useEffect(() => {
     const onResize = () => {
       const mobile = window.innerWidth < MOBILE_BP;
@@ -58,7 +60,8 @@ const Layout = () => {
             if (isMobile) setMobileOpen((o) => !o);
             else setCollapsed((c) => !c);
           }}
-          onNewClick={() => setIsAccessionOpen(true)}
+          onOpenAccession={() => setIsAccessionOpen(true)}
+          onOpenBatch={() => setIsBatchOpen(true)}
         />
       </div>
 
@@ -144,6 +147,9 @@ const Layout = () => {
         open={isAccessionOpen}
         onOpenChange={setIsAccessionOpen}
       />
+      {isBatchOpen && (
+        <NewBatchModal open={isBatchOpen} onOpenChange={setIsBatchOpen} />
+      )}
     </div>
   );
 };

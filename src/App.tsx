@@ -14,9 +14,8 @@ import BatchesPage from "./pages/BatchesPage";
 import SamplesPage from "./pages/SamplesPage";
 import SlidesPage from "./pages/SlidesPage";
 import SamplesDetailsPage from "./pages/SampleDetailsPage";
-import SlideDetailsPage from './pages/SlideDetailPage';
-
-import SlideDetails from './pages/SlideDetails';
+import SlideDetailPage from "./pages/SlideDetailPage";
+import SlideDetails from "./pages/SlideDetails";
 function App() {
   return (
     <AuthProvider>
@@ -32,8 +31,8 @@ function App() {
                 <Route path="/samples" element={<SamplesPage />} />
                 <Route path="/sample-details/:sampleId" element={<SamplesDetailsPage />} />
                 <Route path="/slides" element={<SlidesPage />} />
-                <Route path="/samples/:sampleId/slide-details/:slideId" element={<SlideDetails />} />
-                <Route path="/slides/:id" element={<SlideDetailsPage />} />
+                <Route path="/samples/:sampleId/slide-details/:slideId" element={<SlideDetails/>} />
+                <Route path="/slides/:id" element={<SlideDetailPage />} />
               </Route>
             </Route>
             {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}

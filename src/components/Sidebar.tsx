@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import logo from '../assets/new-logo.png';
@@ -6,7 +7,8 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
-  onNewClick: () => void;
+  onOpenAccession: () => void;
+  onOpenBatch: () => void;
 }
 
 const BatchIcon = () => (
@@ -49,11 +51,43 @@ const navItems = [
   { label: 'Slides', path: '/slides', icon: <SlidesIcon /> },
 ];
 
-const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
-  const { session, logout } = useAuth();
+const Sidebar = ({
+  collapsed,
+  onToggle,
+  onOpenAccession,
+  onOpenBatch,
+}: SidebarProps) => {
+  const { username, role, logout } = useAuth();
   const navigate = useNavigate();
+const [showNewDropdown, setShowNewDropdown] = useState(false);
+const dropdownRef = useRef<HTMLDivElement | null>(null);
+  // const [newOpen, setNewOpen] = useState(false);
+  // const newRef = useRef<HTMLDivElement>(null);
 
-  const handleLogout = () => { logout(); navigate('/'); };
+  const avatarChar = (username ?? role ?? "U").charAt(0).toUpperCase();
+
+  // Close dropdown on outside click
+ useEffect(() => {
+   const close = (e: MouseEvent) => {
+     if (
+       dropdownRef.current &&
+       !dropdownRef.current.contains(e.target as Node)
+     ) {
+       setShowNewDropdown(false);
+     }
+   };
+
+   if (showNewDropdown) {
+     document.addEventListener("mousedown", close);
+   }
+
+   return () => document.removeEventListener("mousedown", close);
+ }, [showNewDropdown]);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
 
   return (
     <>
@@ -77,11 +111,17 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
           transition: "width 0.25s cubic-bezier(.4,0,.2,1)",
           overflow: "hidden",
           flexShrink: 0,
+<<<<<<< HEAD
 
         }}
       >
 
 
+=======
+          boxShadow: "4px 0 10px rgba(0, 0, 0, 0.08)",
+        }}
+      >
+>>>>>>> f0bda3b1e79752ab8b08fec9d6e5c13a1f3d2365
         {/* Logo + toggle arrow */}
         <div
           style={{
@@ -89,8 +129,9 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
             alignItems: "center",
             justifyContent: collapsed ? "center" : "space-between",
             padding: "0 14px",
-            height: 64,
+            height: 68,
             flexShrink: 0,
+            borderBottom: "1px solid #f3f4f6",
           }}
         >
           {!collapsed && (
@@ -102,8 +143,11 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                 overflow: "hidden",
               }}
             >
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> f0bda3b1e79752ab8b08fec9d6e5c13a1f3d2365
               <img
                 src={logo}
                 alt="QuantumCyte"
@@ -164,8 +208,9 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
           </button> */}
         </div>
 
-        {/* Search */}
+        {/* ── Search ── */}
         {!collapsed && (
+<<<<<<< HEAD
           // <div style={{ padding: "0 12px 14px" }}>
           //   <div className='border border-black/10'
           //     style={{
@@ -180,6 +225,11 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
 
           <div style={{ padding: "0 16px 14px" }}>
             <div
+=======
+          <div style={{ padding: "0 12px 14px" }}>
+            <div
+              className="border border-black/10"
+>>>>>>> f0bda3b1e79752ab8b08fec9d6e5c13a1f3d2365
               style={{
                 background: "rgba(255,255,255,0.1)",
                 border: "1px solid rgba(255,255,255,0.15)",
@@ -231,9 +281,16 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
           </div>
         )}
 
-        {/* New button */}
-        <div style={{ padding: collapsed ? "0 10px 16px" : "0 12px 16px" }}>
+        {/* ── New button + dropdown ── */}
+        <div
+          ref={dropdownRef}
+          style={{
+            padding: collapsed ? "0 10px 16px" : "0 12px 16px",
+            position: "relative",
+          }}
+        >
           <button
+<<<<<<< HEAD
             onClick={onNewClick}
             style={{
               width: "max-content",
@@ -242,10 +299,23 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
               color: "white",
               padding: "10px 26px",
               fontWeight: 500,
+=======
+            className="sb-new-btn"
+            onClick={() => setShowNewDropdown((s) => !s)}
+            style={{
+              width: "100%",
+
+              background: "rgba(255,255,255,0.18)",
+              border: "none",
+              borderRadius: 20,
+              color: "#000",
+              fontWeight: 600,
+>>>>>>> f0bda3b1e79752ab8b08fec9d6e5c13a1f3d2365
               fontSize: 14,
               border: "none",
               display: "flex",
               alignItems: "center",
+<<<<<<< HEAD
               justifyContent: "center",
               gap: 6,
               cursor: "pointer",
@@ -253,10 +323,83 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
           >
             {!collapsed && "New"}
             <MdOutlineKeyboardArrowRight />
+=======
+              justifyContent: collapsed ? "center" : "space-between",
+              gap: 8,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <PlusIcon />
+              {!collapsed && "New"}
+            </div>
+
+            {!collapsed && (
+              <span
+                style={{
+                  transform: showNewDropdown ? "rotate(90deg)" : "none",
+                  transition: "0.2s",
+                }}
+              >
+                ›
+              </span>
+            )}
+>>>>>>> f0bda3b1e79752ab8b08fec9d6e5c13a1f3d2365
           </button>
+
+          {!collapsed && showNewDropdown && (
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 12,
+                right: 12,
+                marginTop: 8,
+                background: "#fff",
+                borderRadius: 14,
+                boxShadow: "0 15px 40px rgba(0,0,0,0.18)",
+                overflow: "hidden",
+                zIndex: 50,
+              }}
+            >
+              <button
+                onClick={() => {
+                  setShowNewDropdown(false);
+                  onOpenAccession();
+                }}
+                style={{
+                  width: "100%",
+                  padding: "14px 18px",
+                  border: "none",
+                  background: "#fff",
+                  textAlign: "left",
+                  cursor: "pointer",
+                }}
+              >
+                New Accession
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowNewDropdown(false);
+                  onOpenBatch();
+                }}
+                style={{
+                  width: "100%",
+                  padding: "14px 18px",
+                  borderTop: "1px solid #f3f4f6",
+                  border: "none",
+                  background: "#fff",
+                  textAlign: "left",
+                  cursor: "pointer",
+                }}
+              >
+                New Batch
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Nav links */}
+        {/* ── Nav ── */}
         <nav style={{ flex: 1, padding: "0 8px", overflowY: "auto" }}>
           {navItems.map((item) => (
             <NavLink
@@ -267,7 +410,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                 display: "flex",
                 alignItems: "center",
                 gap: 12,
-                padding: collapsed ? "10px 0" : "10px 12px",
+                padding: collapsed ? "10px 0" : "10px 14px",
                 justifyContent: collapsed ? "center" : "flex-start",
                 borderRadius: 10,
                 marginBottom: 2,
@@ -287,10 +430,10 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
           ))}
         </nav>
 
-        {/* User + logout */}
+        {/* ── User + logout ── */}
         <div
           style={{
-            borderTop: "1px solid rgba(255,255,255,0.12)",
+            borderTop: "1px solid #f3f4f6",
             padding: collapsed ? "14px 0" : "14px",
             flexShrink: 0,
           }}
@@ -331,7 +474,10 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
           </button>
           {!collapsed ? (
             <>
+<<<<<<< HEAD
 
+=======
+>>>>>>> f0bda3b1e79752ab8b08fec9d6e5c13a1f3d2365
               <div
                 style={{
                   display: "flex",
@@ -340,31 +486,37 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   marginBottom: 10,
                 }}
               >
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> f0bda3b1e79752ab8b08fec9d6e5c13a1f3d2365
                 <div
                   style={{
                     width: 36,
                     height: 36,
                     borderRadius: "50%",
-                    background: "rgba(255,255,255,0.22)",
+                    background: "#ede9fe",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#1E1E1E",
+                    color: "#6d28d9",
                     flexShrink: 0,
                   }}
                 >
-                  {session?.role?.charAt(0).toUpperCase() ?? "U"}
-
+                  {avatarChar}
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <div
                     style={{
+<<<<<<< HEAD
                       background: "rgba(255,255,255,0.15)",
                       color: "white",
+=======
+                      color: "#111827",
+>>>>>>> f0bda3b1e79752ab8b08fec9d6e5c13a1f3d2365
                       fontSize: 13,
                       fontWeight: 600,
                       whiteSpace: "nowrap",
@@ -372,7 +524,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                       textOverflow: "ellipsis",
                     }}
                   >
-                    MadScientist
+                    {username ?? "User"}
                   </div>
                   <div
                     style={{
@@ -381,10 +533,13 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                       textTransform: "capitalize",
                     }}
                   >
-                    {session?.role ?? "Lab Tech"}
+                    {role ?? "Lab Tech"}
                   </div>
                 </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> f0bda3b1e79752ab8b08fec9d6e5c13a1f3d2365
               </div>
 
               <button
@@ -423,7 +578,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   width: 32,
                   height: 32,
                   borderRadius: "50%",
-                  background: "rgba(255,255,255,0.22)",
+                  background: "#ede9fe",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -432,7 +587,7 @@ const Sidebar = ({ collapsed, onToggle, onNewClick }: SidebarProps) => {
                   color: "#1E1E1E",
                 }}
               >
-                {session?.role?.charAt(0).toUpperCase() ?? "U"}
+                {avatarChar}
               </div>
               <button
                 className="sb-logout"
