@@ -2,16 +2,9 @@ import { useState } from "react";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { mockSamples } from "../data/mockData";
-
-type Sample = {
-    id: string;
-    customer: string;
-    batchId: string;
-    slides: number;
-    status: string;
-    actionStatus: string;
-    receivedDate: string;
-};
+import SampleNewAccesionModal from "../components/SampleNewAccessionModal";
+import { ArrowUpDown } from "lucide-react";
+import type { Sample } from "../types/sample";
 
 // const samplesData: Sample[] = [
 //     { id: "0789456321", customer: "UCLA Health", batchId: "00318853", slides: 12, status: "In Process", actionStatus: "5x Alignment Scan", receivedDate: "02/25/26" },
@@ -35,17 +28,21 @@ type Sample = {
 // ];
 
 const actionStatusColorMap: Record<string, string> = {
-    "5x Alignment Scan": "bg-cyan-50 text-cyan-500",
-    "Waiting for 40x": "bg-purple-50 text-purple-500",
-    "waiting for Ark": "bg-orange-50 text-orange-500",
-    "waiting for dry": "bg-yellow-50 text-yellow-500",
-    "awaiting dry dry": "bg-pink-50 text-pink-500",
-    "Ready for Lysis": "bg-blue-50 text-blue-500",
-    "Ready for Scan": "bg-indigo-50 text-indigo-500",
-    "Ready for Fiducials": "bg-green-50 text-green-500",
-    "Ready for Review": "bg-red-50 text-red-500",
+    "No Slides": "bg-gray-50 text-gray-500",
+    "Waiting for files": "bg-yellow-50 text-yellow-600",
+    "Ready to Process": "bg-indigo-50 text-indigo-600",
+    "Preparing": "bg-blue-50 text-blue-600",
+    "Ready for Fiducials": "bg-green-50 text-green-600",
+    "Ready for 5x Scan": "bg-cyan-50 text-cyan-600",
+    "PrintMatch Processing": "bg-purple-50 text-purple-600",
+    "Ready for PrintMatch Review": "bg-pink-50 text-pink-600",
+    "Ready for Print": "bg-orange-50 text-orange-600",
+    "Printing": "bg-amber-50 text-amber-600",
+    "Ready for Lysis": "bg-blue-50 text-blue-600",
+    "In Lysis": "bg-teal-50 text-teal-600",
+    "Ready to Deliver": "bg-emerald-50 text-emerald-600",
+    "Complete": "bg-gray-100 text-gray-700",
 };
-
 const ArrowIcon = () => (
     <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
         <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
@@ -64,12 +61,20 @@ const SortIcon = () => (
 
 const STATUS_OPTIONS = [
     "All Statuses",
-    "5x Alignment Scan",
-    "Waiting for 40x",
+    "No Slides",
+    "Waiting for files",
+    "Ready to Process",
+    "Preparing",
+    "Ready for Fiducials",
+    "Ready for 5x Scan",
+    "PrintMatch Processing",
+    "Ready for PrintMatch Review",
+    "Ready for Print",
+    "Printing",
     "Ready for Lysis",
-    "Ready for Review",
-    "Ready for Mask",
-    "Ready for Fiducials"
+    "In Lysis",
+    "Ready to Deliver",
+    "Complete"
 ] as const;
 
 export default function SamplesPage() {
@@ -77,24 +82,82 @@ export default function SamplesPage() {
     const navigate = useNavigate();
     const [filterStatus, setFilterStatus] = useState<string>("All Statuses");
     const [sortOrder, setSortOrder] = useState<string>("Sort by Status");
-
-    const [statusFilter, setStatusFilter] = useState<string>('All Statuses');
+    const [newSampleModalOpen, setNewSampleModalOpen] = useState(false);
+    const [statusFilters, setStatusFilters] = useState<string[]>(["All Statuses"]);
     const [sortAsc, setSortAsc] = useState(true);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [sortField, setSortField] = useState<"status" | "batchId" | "slideCount">("status");
+    const [sortOpen, setSortOpen] = useState(false);
 
     const handleRowClick = (sample: Sample) => {
         navigate(`/sample-details/${sample.id}`, { state: { sample } });
     };
 
-    const filterOptions = ["All Statuses", "In Process", "Completed", "On Hold", "Ready for Fiducials", "Scanned"];
-    const sortOptions = ["Sort by Status", "Sort by ID", "Sort by Batch"];
+
+    const toggleStatus = (status: string) => {
+        if (status === "All Statuses") {
+            setStatusFilters(["All Statuses"]);
+            return;
+        }
+
+        setStatusFilters(prev => {
+            const exists = prev.includes(status);
+
+            let next = exists
+                ? prev.filter(s => s !== status)
+                : [...prev.filter(s => s !== "All Statuses"), status];
+
+            if (next.length === 0) next = ["All Statuses"];
+
+            return next;
+        });
+    };
+
+    // const filteredSamples = samplesData
+    //     .filter(b =>
+    //         statusFilters.includes("All Statuses") || statusFilters.includes(b.status)
+    //     )
+    //     .sort((a, b) =>
+    //         sortAsc
+    //             ? a.status.localeCompare(b.status)
+    //             : b.status.localeCompare(a.status)
+    //     );
+
 
     const filteredSamples = samplesData
-        .filter(b => statusFilter === 'All Statuses' || b.status === statusFilter)
-        .sort((a, b) => sortAsc ? a.status.localeCompare(b.status) : b.status.localeCompare(a.status));
+        .filter(b =>
+            statusFilters.includes("All Statuses") || statusFilters.includes(b.status)
+        )
+        .sort((a, b) => {
+            let valA;
+            let valB;
 
+            switch (sortField) {
+                case "status":
+                    valA = a.status;
+                    valB = b.status;
+                    return sortAsc
+                        ? valA.localeCompare(valB)
+                        : valB.localeCompare(valA);
 
+                case "batchId":
+                    valA = a.batchId;
+                    valB = b.batchId;
+                    return sortAsc
+                        ? valA.localeCompare(valB)
+                        : valB.localeCompare(valA);
 
+                case "slideCount":
+                    valA = a.slides;
+                    valB = b.slides;
+                    return sortAsc
+                        ? valA - valB
+                        : valB - valA;
+
+                default:
+                    return 0;
+            }
+        });
     return (
         <div className="min-h-screen bg-white p-8 mx-14 my-4">
             <div className="mb-4">
@@ -102,40 +165,213 @@ export default function SamplesPage() {
                     <h1 className="text-5xl font-bold text-gray-900">
                         Samples
                     </h1>
-                
+
 
                     <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-                        <div style={{ position: 'relative' }}>
-                            <button className="ctrl-btn" onClick={() => setShowDropdown(d => !d)}
-                                style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff', fontSize: 13, fontWeight: 500, color: '#374151', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s', whiteSpace: 'nowrap' }}>
-                                <span style={{ color: '#9ca3af', fontSize: 12 }}>Status:</span>
-                                <span>{statusFilter}</span>
-                                <ChevronDown />
-                            </button>
-                            {showDropdown && (
-                                <>
-                                    <div onClick={() => setShowDropdown(false)} style={{ position: 'fixed', inset: 0, zIndex: 10 }} />
-                                    <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 20, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.1)', minWidth: 170, overflow: 'hidden' }}>
-                                        {STATUS_OPTIONS.map(opt => (
-                                            <button key={opt} className="status-opt"
-                                                onClick={() => { setStatusFilter(opt as BatchStatus | 'All Statuses'); setShowDropdown(false); }}
-                                                style={{ display: 'block', width: '100%', textAlign: 'left', padding: '9px 16px', background: statusFilter === opt ? '#f5f3ff' : 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: statusFilter === opt ? '#6d28d9' : '#374151', fontFamily: 'inherit', fontWeight: statusFilter === opt ? 600 : 400 }}>
-                                                {opt}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                        <button className="ctrl-btn" onClick={() => setSortAsc(s => !s)}
-                            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff', fontSize: 13, fontWeight: 500, color: '#374151', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s', whiteSpace: 'nowrap' }}>
-                            <SortIcon />Sort by Status
+                        <button
+                            onClick={() => setNewSampleModalOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#4338E0] text-white text-sm cursor-pointer hover:bg-[#3730B8] transition-colors">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="lucide lucide-plus"
+                            >
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5v14"></path>
+                            </svg>
+
+                            New Accession
                         </button>
+
+                        {newSampleModalOpen &&
+                            <SampleNewAccesionModal onClose={() => setNewSampleModalOpen(false)} />
+                        }
+
+
+
                     </div>
                 </div>
 
                 {/* Sample Count */}
-                <p className="text-gray-400 text-sm">{filteredSamples.length} samples</p>
+                <div className="flex justify-between items-center mb-4">
+
+                    <p className="text-gray-400 text-sm">{filteredSamples.length} samples</p>
+
+                    <div className="flex gap-4 items-center">
+
+
+
+                        <div style={{ position: "relative" }}>
+                            <button
+                                className="ctrl-btn"
+                                onClick={() => setShowDropdown(d => !d)}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 6,
+                                    padding: "7px 14px",
+                                    borderRadius: 10,
+                                    border: "1.5px solid #e5e7eb",
+                                    background: "#fff",
+                                    fontSize: 13,
+                                    fontWeight: 500,
+                                    color: "#374151",
+                                    cursor: "pointer",
+                                    fontFamily: "inherit",
+                                    transition: "border-color 0.15s",
+                                    whiteSpace: "nowrap"
+                                }}
+                            >
+                                <span style={{ color: "#9ca3af", fontSize: 12 }}>Status:</span>
+                                <span>{statusFilters.join(", ")}</span>
+                                <ChevronDown />
+                            </button>
+
+                            {showDropdown && (
+                                <>
+                                    <div
+                                        onClick={() => setShowDropdown(false)}
+                                        style={{ position: "fixed", inset: 0, zIndex: 10 }}
+                                    />
+
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            top: "calc(100% + 6px)",
+                                            left: 0,
+                                            zIndex: 20,
+                                            background: "#fff",
+                                            border: "1px solid #e5e7eb",
+                                            borderRadius: 10,
+                                            boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
+                                            minWidth: 220,
+                                            maxHeight: 320,
+                                            overflowY: "auto"
+                                        }}
+                                    >
+                                        {STATUS_OPTIONS.map(opt => {
+                                            const selected = statusFilters.includes(opt);
+
+                                            return (
+                                                <button
+                                                    key={opt}
+                                                    onClick={() => toggleStatus(opt)}
+                                                    style={{
+                                                        width: "100%",
+                                                        textAlign: "left",
+                                                        padding: "9px 14px",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: 8,
+                                                        background: selected ? "#f1f5f9" : "transparent",
+                                                        border: "none",
+                                                        cursor: "pointer",
+                                                        fontSize: 13
+                                                    }}
+                                                >
+                                                    {/* Checkbox */}
+                                                    <div
+                                                        style={{
+                                                            width: 16,
+                                                            height: 16,
+                                                            borderRadius: 4,
+                                                            border: selected ? "1px solid #4338E0" : "1px solid #CBD5E1",
+                                                            background: selected ? "#4338E0" : "transparent",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            flexShrink: 0
+                                                        }}
+                                                    >
+                                                        {selected && (
+                                                            <svg
+                                                                width="10"
+                                                                height="10"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="white"
+                                                                strokeWidth="3"
+                                                            >
+                                                                <path d="M20 6 9 17l-5-5" />
+                                                            </svg>
+                                                        )}
+                                                    </div>
+
+                                                    <span style={{ fontWeight: selected ? 500 : 400 }}>{opt}</span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+                        <div className="relative">
+                            <button
+                                onClick={() => setSortOpen(o => !o)}
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#CBD5E1] bg-white hover:bg-[#F1F5F9] text-sm"
+                            >
+                                <ArrowUpDown className="h-[14px] w-[14px]" />
+                                <span>
+                                    {sortField === "status"
+                                        ? "Status"
+                                        : sortField === "batchId"
+                                            ? "Batch Number"
+                                            : "Number of Slides"}
+                                </span>
+                                <ChevronDown className="h-[14px] w-[14px]" />
+                            </button>
+
+                            {sortOpen && (
+                                <div className="absolute right-0 top-full mt-1 bg-white border border-[#CBD5E1] rounded-lg shadow-lg py-1 min-w-[200px] z-50">
+
+                                    <button
+                                        onClick={() => {
+                                            setSortField("status");
+                                            setSortOpen(false);
+                                        }}
+                                        className="w-full text-left px-4 py-2.5 hover:bg-[#F1F5F9] text-sm"
+                                    >
+                                        Status
+                                    </button>
+
+                                    <button
+                                        onClick={() => {
+                                            setSortField("batchId");
+                                            setSortOpen(false);
+                                        }}
+                                        className="w-full text-left px-4 py-2.5 hover:bg-[#F1F5F9] text-sm"
+                                    >
+                                        Batch Number
+                                    </button>
+
+                                    <button
+                                        onClick={() => {
+                                            setSortField("slideCount");
+                                            setSortOpen(false);
+                                        }}
+                                        className="w-full text-left px-4 py-2.5 hover:bg-[#F1F5F9] text-sm"
+                                    >
+                                        Number of Slides
+                                    </button>
+
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
             </div>
 
 
@@ -159,7 +395,7 @@ export default function SamplesPage() {
                                     <p className="text-xs text-cyan-500 font-semibold">Batch</p>
                                 </td>
                                 <td>
-                                    <p className="text-lg text-black font-semibold">{sample.slides}</p>
+                                    <p className="text-lg text-black font-semibold">{sample.slideCount}</p>
                                     <p className="text-xs text-cyan-500 font-semibold">Slides</p>
                                 </td>
 

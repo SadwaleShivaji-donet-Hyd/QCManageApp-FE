@@ -1,26 +1,25 @@
 import type { Sample, Slide, LogEntry } from "../types/sample";
 
 export const mockSamples: Sample[] = [
-  { id: "0789456321", customer: "UCLA Health", batchId: "003818853", slideCount: 12, status: "5x Alignment Scan", receivedDate: "02/10/26", limsId: "1854802893" },
-  { id: "0789456322", customer: "Mayo Lab", batchId: "003818853", slideCount: 5, status: "Waiting for 40x", receivedDate: "02/08/26" },
-  { id: "0789456323", customer: "Stanford Med", batchId: "003818853", slideCount: 8, status: "5x Alignment Scan", receivedDate: "02/09/26" },
-  { id: "0789456421", customer: "Stanford Med", batchId: "003818854", slideCount: 9, status: "5x Alignment Scan", receivedDate: "02/11/26" },
-  { id: "0789456422", customer: "Stanford Med", batchId: "003818854", slideCount: 11, status: "5x Alignment Scan", receivedDate: "02/11/26" },
-  { id: "0789456423", customer: "Stanford Med", batchId: "003818854", slideCount: 10, status: "Waiting for 40x", receivedDate: "02/10/26" },
-  { id: "0789456521", customer: "Mayo Lab", batchId: "003818855", slideCount: 12, status: "5x Alignment Scan", receivedDate: "02/12/26" },
-  { id: "0789456522", customer: "Stanford Med", batchId: "003818855", slideCount: 8, status: "5x Alignment Scan", receivedDate: "02/12/26" },
-  { id: "0789456523", customer: "Kaiser Clinic", batchId: "003818855", slideCount: 12, status: "Ready for Lysis", receivedDate: "02/12/26" },
-  { id: "0789456621", customer: "Stanford Med", batchId: "003818856", slideCount: 12, status: "Ready for Review", receivedDate: "02/13/26" },
-  { id: "0789456622", customer: "Mayo Lab", batchId: "003818856", slideCount: 6, status: "Ready for Lysis", receivedDate: "02/13/26" },
-  { id: "0789456623", customer: "UCLA Health", batchId: "003818856", slideCount: 12, status: "Ready for Lysis", receivedDate: "02/13/26" },
-  { id: "0789456721", customer: "Johns Hopkins", batchId: "003818857", slideCount: 9, status: "Ready for Mask", receivedDate: "02/14/26" },
+  { id: "0789456321", customer: "UCLA Health", batchId: "003818853", slideCount: 12, status: "Ready for 5x Scan", receivedDate: "02/10/26", limsId: "1854802893" },
+  { id: "0789456322", customer: "Mayo Lab", batchId: "003818853", slideCount: 5, status: "Waiting for files", receivedDate: "02/08/26" },
+  { id: "0789456323", customer: "Stanford Med", batchId: "003818853", slideCount: 8, status: "Ready for Slide Processing", receivedDate: "02/09/26" },
+  { id: "0789456421", customer: "Stanford Med", batchId: "003818854", slideCount: 9, status: "Ready for 5x Scan", receivedDate: "02/11/26" },
+  { id: "0789456422", customer: "Stanford Med", batchId: "003818854", slideCount: 11, status: "Ready for Fiducials", receivedDate: "02/11/26" },
+  { id: "0789456423", customer: "Stanford Med", batchId: "003818854", slideCount: 10, status: "PrintMatch Processing", receivedDate: "02/10/26" },
+  { id: "0789456521", customer: "Mayo Lab", batchId: "003818855", slideCount: 12, status: "Ready for PrintMatch Review", receivedDate: "02/12/26" },
+  { id: "0789456522", customer: "Stanford Med", batchId: "003818855", slideCount: 8, status: "Ready for Print", receivedDate: "02/12/26" },
+  { id: "0789456523", customer: "Kaiser Clinic", batchId: "003818855", slideCount: 12, status: "Printing", receivedDate: "02/12/26" },
+  { id: "0789456621", customer: "Stanford Med", batchId: "003818856", slideCount: 12, status: "Ready for Lysis", receivedDate: "02/13/26" },
+  { id: "0789456622", customer: "Mayo Lab", batchId: "003818856", slideCount: 6, status: "In Lysis", receivedDate: "02/13/26" },
+  { id: "0789456623", customer: "UCLA Health", batchId: "003818856", slideCount: 12, status: "Ready to Deliver", receivedDate: "02/13/26" },
+  { id: "0789456721", customer: "Johns Hopkins", batchId: "003818857", slideCount: 9, status: "Complete", receivedDate: "02/14/26" },
   { id: "0789456722", customer: "Mayo Lab", batchId: "003818857", slideCount: 9, status: "Ready for Lysis", receivedDate: "02/14/26" },
-  { id: "0789456723", customer: "Johns Hopkins", batchId: "003818857", slideCount: 8, status: "Ready for Mask", receivedDate: "02/14/26" },
-  { id: "0789456821", customer: "Stanford Med", batchId: "003818858", slideCount: 8, status: "Ready for Mask", receivedDate: "02/15/26" },
+  { id: "0789456723", customer: "Johns Hopkins", batchId: "003818857", slideCount: 8, status: "PrintMatch Processing", receivedDate: "02/14/26" },
+  { id: "0789456821", customer: "Stanford Med", batchId: "003818858", slideCount: 8, status: "Ready for Slide Processing", receivedDate: "02/15/26" },
   { id: "0789456822", customer: "Johns Hopkins", batchId: "003818858", slideCount: 10, status: "Ready for Fiducials", receivedDate: "02/15/26" },
-  { id: "0789456823", customer: "UCLA Health", batchId: "003818858", slideCount: 8, status: "Ready for Review", receivedDate: "02/15/26" },
+  { id: "0789456823", customer: "UCLA Health", batchId: "003818858", slideCount: 8, status: "Ready to Deliver", receivedDate: "02/15/26" },
 ];
-
 // export const mockSlides: Record<string, Slide[]> = {
 //   "0789456321": [
 //     { id: "8238058135", status: "5x Alignment Scan" },

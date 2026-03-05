@@ -140,7 +140,7 @@ export default function SampleDetailsPage() {
     // Get sample details from the map (in a real app, this would come from an API)
     const sampleDetail = sampleDetailsMap[sampleId || "0789456321"] || sampleDetailsMap["0789456321"];
 
-   
+
 
     const handleBackToSamples = () => {
         navigate("/samples");
@@ -251,6 +251,28 @@ export default function SampleDetailsPage() {
             <div className="mb-6">
                 <ProgressStepper currentStatus={sample?.status} />
             </div>
+
+            {sample?.status === "Ready to Process" && (
+                <div
+                    className="rounded-xl px-6 py-4 mb-6 flex items-center justify-between bg-[#E0F7FA]"
+                    style={{ border: "4px solid rgb(0, 172, 193)" }}
+                >
+                    <div className="flex items-center gap-3">
+                        <span style={{ fontWeight: 600 }}>
+                            All files loaded for {sample?.slideCount} slides — ready to begin processing
+                        </span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <button
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-colors bg-[#4338E0] text-white hover:bg-[#3730B8]"
+                            onClick={handleStartProcessing}
+                        >
+                            Start Processing
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Sample Info Card */}
             <div className="bg-white rounded-xl border border-gray-200 p-8 py-4 mb-8">

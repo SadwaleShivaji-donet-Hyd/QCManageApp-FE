@@ -53,6 +53,65 @@ const SlideDetails = () => {
   const [showLog, setShowLog] = useState(false);
   const [isExcluded, setIsExcluded] = useState(false);
   const [exclusionReason, setExclusionReason] = useState<string | null>(null);
+
+  const SampleInfoCard = ({
+    sampleId,
+    batchId,
+    slides,
+    customer,
+    received,
+    limsId,
+  }: {
+    sampleId: string;
+    batchId: string;
+    slides: number;
+    customer: string;
+    received: string;
+    limsId: string;
+  }) => {
+    return (
+      <div className="bg-white border border-[#CBD5E1] rounded-lg px-8 py-5 mb-8">
+        <div className="flex items-center gap-12">
+
+          <div className="flex flex-col gap-1">
+            <span className="text-[#4338E0] cursor-pointer hover:underline font-semibold">
+              {sampleId}
+            </span>
+            <span className="text-[#00ACC1] text-sm">Sample</span>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-[#4338E0] cursor-pointer hover:underline font-semibold">
+              {batchId}
+            </span>
+            <span className="text-[#00ACC1] text-sm">Batch</span>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold">{slides}</span>
+            <span className="text-[#00ACC1] text-sm">Slides</span>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold">{customer}</span>
+            <span className="text-[#00ACC1] text-sm">Customer</span>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold">{received}</span>
+            <span className="text-[#00ACC1] text-sm">Received</span>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold">{limsId}</span>
+            <span className="text-[#00ACC1] text-sm">LIMS ID</span>
+          </div>
+
+        </div>
+      </div>
+    );
+  };
+
   const problemOptions = [
     "Damaged during processing",
     "Poor tissue quality",
@@ -208,7 +267,7 @@ const SlideDetails = () => {
               <button className="px-4 py-2 rounded-lg hover:text-[#06748c]">
                 Recheck Folder
               </button>
-              <button className="px-4 py-2 rounded-lg bg-[#2c2c2c] text-white hover:bg-[#1e1e1e]">
+              <button className="px-4 py-2 rounded-lg bg-[#4338E0] text-white hover:bg-[#3730B8]">
                 Upload Files
               </button>
             </>
@@ -234,7 +293,7 @@ const SlideDetails = () => {
           message="Ready for 5x Alignment Scan"
           actions={
             <button
-              className="px-4 py-2 rounded-lg bg-[#2c2c2c] text-white hover:bg-[#1e1e1e]"
+              className="px-4 py-2 rounded-lg bg-[#4338E0] text-white hover:bg-[#3730B8]"
             >
               Upload Scan
             </button>
@@ -368,9 +427,9 @@ const SlideDetails = () => {
     message: React.ReactNode;
     actions: React.ReactNode;
   }) => (
-    <div className="bg-[#e6e6e6] border-4 border-[#757575] rounded-xl px-6 py-4 mb-6 flex items-center justify-between">
+    <div className="bg-[#E0F7FA] border-4 border-[#00ACC1] rounded-xl px-6 py-4 mb-6 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <Eye size={20} />
+        {/* <Eye size={20} /> */}
         <span className="font-semibold">{message}</span>
       </div>
 
@@ -386,7 +445,7 @@ const SlideDetails = () => {
         const next = getNextStatus(currentStatus);
         if (next) setCurrentStatus(next);
       }}
-      className="px-4 py-2 rounded-lg bg-[#2c2c2c] text-white hover:bg-[#1e1e1e]"
+      className="px-4 py-2 rounded-lg bg-[#4338E0] text-white hover:bg-[#3730B8]"
     >
       Mark Complete
     </button>
@@ -424,11 +483,11 @@ const SlideDetails = () => {
               <div className="rounded-full border border-red-500 shrink-0 w-4 h-4 flex items-center justify-center overflow-hidden">
 
                 <X size={10} className="text-red" strokeWidth={3} />
-               
+
               </div>
-               <span  className="flex items-center gap-2 font-semibold text-lg text-red-600 hover:text-red-700">
+              <span className="flex items-center gap-2 font-semibold text-lg text-red-600 hover:text-red-700">
                 Excluded
-               </span>
+              </span>
             </span>
           }
 
@@ -456,6 +515,15 @@ const SlideDetails = () => {
       {renderAlert()}
 
       {renderSlideLog()}
+
+      <SampleInfoCard
+        sampleId="0789456621"
+        batchId="003818856"
+        slides={8}
+        customer="Stanford Med"
+        received="02/10/26"
+        limsId="18548028123"
+      />
 
       {/* Alert */}
       {/* <div className="bg-[#e6e6e6] border-4 border-[#757575] rounded-xl px-6 py-4 mb-6 flex items-center justify-between">

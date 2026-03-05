@@ -1,18 +1,20 @@
 import type { SlideStatus } from "./slide";
 
 export type SampleStatus =
-  | "Requested"
-  | "5x Alignment Scan"
-  | "Waiting for 40x"
-  | "Ready for Lysis"
-  | "Ready for Review"
-  | "Ready for Mask"
-  | "Ready for Fiducials"
-  | "PrintMatch Processing"
-  | "Checkfile Review"
-  | "Fiducial Printing"
-  | "Mask Printing"
-  | "Complete";
+  "No Slides"|
+"Waiting for files"|
+"Ready to Process"|
+"Preparing"|
+"Ready for Fiducials"|
+"Ready for 5x Scan"|
+"PrintMatch Processing"|
+"Ready for PrintMatch Review"|
+"Ready for Print"|
+"Printing"|
+"Ready for Lysis"|
+"In Lysis"|
+"Ready to Deliver"|
+"Complete"
 
 export interface Sample {
   id: string;

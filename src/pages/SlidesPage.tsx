@@ -2,6 +2,7 @@ import { useState, useEffect as _useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSlides as _getSlides } from "../types/api";
 import type { Slide as _ApiSlide } from '../types';
+import { mockSlides } from '../data/mockData';
 
 /*
 ================================================================================
@@ -66,60 +67,62 @@ const PAGE_SIZE = 25;
 // STEP 4 (API Integration): DELETE or COMMENT OUT this entire ALL_SLIDES array
 // Hardcoded response from API: http://localhost:3000/slides
 // This is temporary data for testing - will be replaced by API call
-const ALL_SLIDES: Slide[] = [
-  { id: 'SLD-001', sampleId: 'SAMPLE-001', status: 'DigitalAssetsReady' },
-  { id: 'SLD-002', sampleId: 'SAMPLE-001', status: 'DigitalAssetsReady' },
-  { id: 'SLD-005', sampleId: 'SAMPLE-010', status: 'Batched' },
-  { id: 'SLD-006', sampleId: 'SAMPLE-010', status: 'DigitalAssetsReady' },
-  { id: 'SLD-007', sampleId: 'SAMPLE-011', status: 'Batched' },
-  { id: 'SLD-008', sampleId: 'SAMPLE-011', status: 'DigitalAssetsReady' },
-  { id: 'SLD-009', sampleId: 'SAMPLE-012', status: 'Ready for Fiducials' },
-  { id: 'SLD-010', sampleId: 'SAMPLE-012', status: 'Waiting for 40x' },
-  { id: 'SLD-011', sampleId: 'SAMPLE-013', status: 'Completed' },
-  { id: 'SLD-012', sampleId: 'SAMPLE-013', status: 'Excluded' },
-  { id: 'SLD-013', sampleId: 'SAMPLE-014', status: '5x Alignment Scan' },
-  { id: 'SLD-014', sampleId: 'SAMPLE-014', status: 'In Process' },
-  { id: 'SLD-015', sampleId: 'SAMPLE-015', status: 'DigitalAssetsReady' },
-  { id: 'SLD-016', sampleId: 'SAMPLE-015', status: 'Batched' },
-  { id: 'SLD-017', sampleId: 'SAMPLE-016', status: 'Ready for Fiducials' },
-  { id: 'SLD-018', sampleId: 'SAMPLE-016', status: 'Waiting for 40x' },
-  { id: 'SLD-019', sampleId: 'SAMPLE-017', status: 'Completed' },
-  { id: 'SLD-020', sampleId: 'SAMPLE-017', status: 'Excluded' },
-  { id: 'SLD-021', sampleId: 'SAMPLE-018', status: '5x Alignment Scan' },
-  { id: 'SLD-022', sampleId: 'SAMPLE-018', status: 'In Process' },
-  { id: 'SLD-023', sampleId: 'SAMPLE-019', status: 'DigitalAssetsReady' },
-  { id: 'SLD-024', sampleId: 'SAMPLE-019', status: 'Batched' },
-  { id: 'SLD-025', sampleId: 'SAMPLE-020', status: 'Ready for Fiducials' },
-  { id: 'SLD-026', sampleId: 'SAMPLE-020', status: 'Waiting for 40x' },
-  { id: 'SLD-027', sampleId: 'SAMPLE-021', status: 'Completed' },
-  { id: 'SLD-028', sampleId: 'SAMPLE-021', status: 'Excluded' },
-  { id: 'SLD-029', sampleId: 'SAMPLE-022', status: '5x Alignment Scan' },
-  { id: 'SLD-030', sampleId: 'SAMPLE-022', status: 'In Process' },
-  { id: 'SLD-031', sampleId: 'SAMPLE-023', status: 'DigitalAssetsReady' },
-  { id: 'SLD-032', sampleId: 'SAMPLE-023', status: 'Batched' },
-  { id: 'SLD-033', sampleId: 'SAMPLE-024', status: 'Ready for Fiducials' },
-  { id: 'SLD-034', sampleId: 'SAMPLE-024', status: 'Waiting for 40x' },
-  { id: 'SLD-035', sampleId: 'SAMPLE-025', status: 'Completed' },
-  { id: 'SLD-036', sampleId: 'SAMPLE-025', status: 'Excluded' },
-  { id: 'SLD-037', sampleId: 'SAMPLE-026', status: '5x Alignment Scan' },
-  { id: 'SLD-038', sampleId: 'SAMPLE-026', status: 'In Process' },
-  { id: 'SLD-039', sampleId: 'SAMPLE-027', status: 'DigitalAssetsReady' },
-  { id: 'SLD-040', sampleId: 'SAMPLE-027', status: 'Batched' },
-  { id: 'SLD-041', sampleId: 'SAMPLE-028', status: 'Ready for Fiducials' },
-  { id: 'SLD-042', sampleId: 'SAMPLE-028', status: 'Waiting for 40x' },
-  { id: 'SLD-043', sampleId: 'SAMPLE-029', status: 'Completed' },
-  { id: 'SLD-044', sampleId: 'SAMPLE-029', status: 'Excluded' },
-  { id: 'SLD-045', sampleId: 'SAMPLE-030', status: '5x Alignment Scan' },
-  { id: 'SLD-046', sampleId: 'SAMPLE-030', status: 'In Process' },
-  { id: 'SLD-047', sampleId: 'SAMPLE-031', status: 'DigitalAssetsReady' },
-  { id: 'SLD-048', sampleId: 'SAMPLE-031', status: 'Batched' },
-  { id: 'SLD-049', sampleId: 'SAMPLE-032', status: 'Ready for Fiducials' },
-  { id: 'SLD-050', sampleId: 'SAMPLE-032', status: 'Waiting for 40x' },
-  { id: 'SLD-051', sampleId: 'SAMPLE-033', status: 'Completed' },
-  { id: 'SLD-052', sampleId: 'SAMPLE-034', status: 'Completed' },
-  { id: 'SLD-053', sampleId: 'SAMPLE-035', status: 'Completed' },
-  { id: 'SLD-054', sampleId: 'SAMPLE-036', status: 'Completed' },
-];
+
+const ALL_SLIDES = mockSlides;
+// const ALL_SLIDES: Slide[] = [
+//   { id: 'SLD-001', sampleId: 'SAMPLE-001', status: 'DigitalAssetsReady' },
+//   { id: 'SLD-002', sampleId: 'SAMPLE-001', status: 'DigitalAssetsReady' },
+//   { id: 'SLD-005', sampleId: 'SAMPLE-010', status: 'Batched' },
+//   { id: 'SLD-006', sampleId: 'SAMPLE-010', status: 'DigitalAssetsReady' },
+//   { id: 'SLD-007', sampleId: 'SAMPLE-011', status: 'Batched' },
+//   { id: 'SLD-008', sampleId: 'SAMPLE-011', status: 'DigitalAssetsReady' },
+//   { id: 'SLD-009', sampleId: 'SAMPLE-012', status: 'Ready for Fiducials' },
+//   { id: 'SLD-010', sampleId: 'SAMPLE-012', status: 'Waiting for 40x' },
+//   { id: 'SLD-011', sampleId: 'SAMPLE-013', status: 'Completed' },
+//   { id: 'SLD-012', sampleId: 'SAMPLE-013', status: 'Excluded' },
+//   { id: 'SLD-013', sampleId: 'SAMPLE-014', status: '5x Alignment Scan' },
+//   { id: 'SLD-014', sampleId: 'SAMPLE-014', status: 'In Process' },
+//   { id: 'SLD-015', sampleId: 'SAMPLE-015', status: 'DigitalAssetsReady' },
+//   { id: 'SLD-016', sampleId: 'SAMPLE-015', status: 'Batched' },
+//   { id: 'SLD-017', sampleId: 'SAMPLE-016', status: 'Ready for Fiducials' },
+//   { id: 'SLD-018', sampleId: 'SAMPLE-016', status: 'Waiting for 40x' },
+//   { id: 'SLD-019', sampleId: 'SAMPLE-017', status: 'Completed' },
+//   { id: 'SLD-020', sampleId: 'SAMPLE-017', status: 'Excluded' },
+//   { id: 'SLD-021', sampleId: 'SAMPLE-018', status: '5x Alignment Scan' },
+//   { id: 'SLD-022', sampleId: 'SAMPLE-018', status: 'In Process' },
+//   { id: 'SLD-023', sampleId: 'SAMPLE-019', status: 'DigitalAssetsReady' },
+//   { id: 'SLD-024', sampleId: 'SAMPLE-019', status: 'Batched' },
+//   { id: 'SLD-025', sampleId: 'SAMPLE-020', status: 'Ready for Fiducials' },
+//   { id: 'SLD-026', sampleId: 'SAMPLE-020', status: 'Waiting for 40x' },
+//   { id: 'SLD-027', sampleId: 'SAMPLE-021', status: 'Completed' },
+//   { id: 'SLD-028', sampleId: 'SAMPLE-021', status: 'Excluded' },
+//   { id: 'SLD-029', sampleId: 'SAMPLE-022', status: '5x Alignment Scan' },
+//   { id: 'SLD-030', sampleId: 'SAMPLE-022', status: 'In Process' },
+//   { id: 'SLD-031', sampleId: 'SAMPLE-023', status: 'DigitalAssetsReady' },
+//   { id: 'SLD-032', sampleId: 'SAMPLE-023', status: 'Batched' },
+//   { id: 'SLD-033', sampleId: 'SAMPLE-024', status: 'Ready for Fiducials' },
+//   { id: 'SLD-034', sampleId: 'SAMPLE-024', status: 'Waiting for 40x' },
+//   { id: 'SLD-035', sampleId: 'SAMPLE-025', status: 'Completed' },
+//   { id: 'SLD-036', sampleId: 'SAMPLE-025', status: 'Excluded' },
+//   { id: 'SLD-037', sampleId: 'SAMPLE-026', status: '5x Alignment Scan' },
+//   { id: 'SLD-038', sampleId: 'SAMPLE-026', status: 'In Process' },
+//   { id: 'SLD-039', sampleId: 'SAMPLE-027', status: 'DigitalAssetsReady' },
+//   { id: 'SLD-040', sampleId: 'SAMPLE-027', status: 'Batched' },
+//   { id: 'SLD-041', sampleId: 'SAMPLE-028', status: 'Ready for Fiducials' },
+//   { id: 'SLD-042', sampleId: 'SAMPLE-028', status: 'Waiting for 40x' },
+//   { id: 'SLD-043', sampleId: 'SAMPLE-029', status: 'Completed' },
+//   { id: 'SLD-044', sampleId: 'SAMPLE-029', status: 'Excluded' },
+//   { id: 'SLD-045', sampleId: 'SAMPLE-030', status: '5x Alignment Scan' },
+//   { id: 'SLD-046', sampleId: 'SAMPLE-030', status: 'In Process' },
+//   { id: 'SLD-047', sampleId: 'SAMPLE-031', status: 'DigitalAssetsReady' },
+//   { id: 'SLD-048', sampleId: 'SAMPLE-031', status: 'Batched' },
+//   { id: 'SLD-049', sampleId: 'SAMPLE-032', status: 'Ready for Fiducials' },
+//   { id: 'SLD-050', sampleId: 'SAMPLE-032', status: 'Waiting for 40x' },
+//   { id: 'SLD-051', sampleId: 'SAMPLE-033', status: 'Completed' },
+//   { id: 'SLD-052', sampleId: 'SAMPLE-034', status: 'Completed' },
+//   { id: 'SLD-053', sampleId: 'SAMPLE-035', status: 'Completed' },
+//   { id: 'SLD-054', sampleId: 'SAMPLE-036', status: 'Completed' },
+// ];
 
 const STATUS_OPTIONS: ('All Statuses' | SlideStatus)[] = [
   'All Statuses',
@@ -176,7 +179,12 @@ const SlidesPage = () => {
   // STEP 2 (API Integration): Change from ALL_SLIDES to empty array []
   // Currently: useState<Slide[]>(ALL_SLIDES)
   // When API ready: useState<Slide[]>([])
-  const [slides, _setSlides] = useState<Slide[]>(ALL_SLIDES);
+  const [slides, _setSlides] = useState(Object.entries(mockSlides).flatMap(([sampleId, slides]) =>
+  slides.map(slide => ({
+    ...slide,
+    sampleId
+  }))
+));
 
   // STEP 3 (API Integration): UNCOMMENT this entire block when API is ready
   // Also replace all _useEffect with useEffect, _getSlides with getSlides, _ApiSlide with ApiSlide
@@ -234,7 +242,7 @@ const SlidesPage = () => {
         }
       `}</style>
 
-      <div className="min-h-screen w-full bg-white p-8">
+      <div className="min-h-screen bg-white p-8 mx-14 my-4">
         {/* ── Header ── */}
         <div
           className="slides-hdr"
@@ -399,7 +407,7 @@ const SlidesPage = () => {
           )}
         </div> */}
 
-        <div className="bg-white border border-gray-300 rounded-xl overflow-hidden mb-7">
+        <div className="bg-white border border-gray-300 overflow-hidden mb-7">
           <table className="w-full text-sm">
             <tbody>
               {filtered.length === 0 ? (
@@ -412,7 +420,7 @@ const SlidesPage = () => {
                 visible.map((slide) => (
                   <tr
                     key={slide.id}
-                    className="border-t border-gray-100 hover:bg-gray-50 transition bg-white cursor-pointer"
+                    className="border-t border-gray-300 hover:bg-gray-50 transition bg-white cursor-pointer"
                     onClick={() => navigate(`/slides/${slide.id}`)}
                   >
                     {/* Slide ID + Warning */}
@@ -439,8 +447,8 @@ const SlidesPage = () => {
                     <td className="px-6 py-4 text-right">
                       <span
                         className={`px-3 py-2 text-xs font-medium rounded-lg whitespace-nowrap ${statusColors[slide.status]
-                            ? `${statusColors[slide.status].bg} ${statusColors[slide.status].color}`
-                            : "bg-gray-100 text-gray-700"
+                          ? `${statusColors[slide.status].bg} ${statusColors[slide.status].color}`
+                          : "bg-gray-100 text-gray-700"
                           }`}
                       >
                         {slide.status}
